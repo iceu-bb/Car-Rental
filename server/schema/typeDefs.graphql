@@ -1,3 +1,23 @@
+type Car {
+  _id: ID!
+  name: String!
+  model: String!
+  year: Int!
+  group: String!
+}
+
+input AddCarInput {
+  name: String!
+  model: String!
+  year: Int!
+  group: String!
+}
+
 type Query {
   test(text: String): String
+  cars: [Car!]!
+}
+
+type Mutation {
+  addCar(input: AddCarInput!): Car
 }

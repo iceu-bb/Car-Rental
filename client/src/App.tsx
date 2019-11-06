@@ -1,7 +1,11 @@
 import React from 'react';
+import { Cars } from './components/Cars';
 
-const App: React.FC = () => {
-  return <div>Hello</div>;
+export const App: React.FC = () => {
+  return (
+    <div>
+      Hello
+      <Cars />
+    </div>
+  );
 };
-
-export default App;
