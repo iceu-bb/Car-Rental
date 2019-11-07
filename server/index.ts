@@ -1,15 +1,17 @@
 const { ApolloServer } = require('apollo-server-express');
 import express from 'express';
 import http from 'http';
-import { origin, port, mongo_uri } from './env';
+import { origin, port, mongo_uri, secret } from './env';
 import cors from 'cors';
 import schema from './schema';
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
 
 mongoose
   .connect(mongo_uri, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
   })
   .then(() => console.log('DB connected'))
   .catch(() => console.log('Error with Db connection'));
@@ -23,7 +25,19 @@ app.get('/', (req, res) => {
   res.send('Hello Server');
 });
 
-const server = new ApolloServer({ schema });
+const server = new ApolloServer({
+  schema,
+  context: async ({ req, res }: any) => {
+    let decodedToken;
+    const authToken = req.headers.authorization;
+
+    if (authToken) {
+      decodedToken = jwt.verify(authToken, secret);
+    }
+
+    return { decodedToken };
+  }
+});
 
 server.applyMiddleware({
   app,

@@ -5,7 +5,8 @@ import { HttpLink } from 'apollo-link-http';
 const httpUri = process.env.REACT_APP_SERVER_URL + '/graphql';
 
 const httpLink = new HttpLink({
-  uri: httpUri
+  uri: httpUri,
+  credentials: 'include'
 });
 
 const inMemoryCache = new InMemoryCache();
