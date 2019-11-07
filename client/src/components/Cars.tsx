@@ -1,79 +1,41 @@
 import React, { useContext } from 'react';
-import { GraphQLClient } from 'graphql-request';
-import gql from 'graphql-tag';
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import Context from '../context';
+import { Store } from '../Store';
+import { useCarsQuery, useLoginMutation } from '../graphql/types';
+import { Link } from 'react-router-dom';
 
-interface Props {}
+export const Cars: React.FC = () => {
+  const { dispatch } = useContext(Store);
 
-const GET_CARS = gql`
-  {
-    cars {
-      _id
-      name
-      model
-      year
-      group
-    }
+  const [login] = useLoginMutation();
+  const { data } = useCarsQuery();
+
+  if (data === undefined || data.cars === undefined) {
+    return null;
   }
-`;
 
-const LOGIN = gql`
-  mutation {
-    login(email: "test@test.com", password: "test") {
-      token
-    }
-  }
-`;
-
-const ME = `
-  {
-    me {
-      name
-      email
-      role
-      picture
-      createdAt
-    }
-  }
-`;
-
-export const Cars: React.FC<Props> = () => {
-  const { dispatch }: any = useContext(Context);
-  const [login] = useMutation(LOGIN);
-  const { data, error, loading } = useQuery(GET_CARS);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error! {error.message}</div>;
-  }
+  const email = 'test@test.com';
+  const password = 'test';
 
   const handleLogin = async () => {
     try {
-      const { data } = await login();
-      const token = data.login.token;
-      console.log(token);
-
-      window.localStorage.setItem('token', token);
-
-      const client = new GraphQLClient('http://localhost:8000/graphql', {
-        headers: { authorization: token }
-      });
-
-      const { me } = await client.request(ME);
-      console.log(me);
-      dispatch({ type: 'LOGIN_USER', payload: me });
-      dispatch({ type: 'IS_AUTH', payload: true });
+      let token;
+      const { data } = await login({ variables: { email, password } });
+      if (data) {
+        token = data.login.token;
+      }
+      if (token) {
+        window.localStorage.setItem('token', token);
+        dispatch({ type: 'IS_AUTH', payload: true });
+      }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 
   return (
     <div>
       <button onClick={() => handleLogin()}>login</button>
+      <Link to='/protected'>Protected</Link>
       <div>
         {data.cars.map((car: any): any => (
           <div key={car._id}>{car.name}</div>
