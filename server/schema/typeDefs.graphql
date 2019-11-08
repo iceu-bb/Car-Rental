@@ -1,10 +1,10 @@
 type User {
-  _id: ID!
-  name: String
+  _id: ID
+  name: String!
   email: String!
   picture: String
-  role: String
-  createdAt: String
+  role: String!
+  createdAt: String!
 }
 
 type LoginResponse {
@@ -12,7 +12,7 @@ type LoginResponse {
 }
 
 type Car {
-  _id: ID!
+  _id: ID
   name: String!
   model: String!
   year: Int!
@@ -26,12 +26,11 @@ input AddCarInput {
   group: String!
 }
 
-input UserInput {
+input RegisterInput {
   name: String!
   email: String!
   password: String!
   passwordConfirm: String!
-  picture: String
 }
 
 type Query {
@@ -42,5 +41,5 @@ type Query {
 type Mutation {
   addCar(input: AddCarInput!): Car
   login(email: String!, password: String!): LoginResponse!
-  signup(input: UserInput!): User
+  register(input: RegisterInput!): User
 }

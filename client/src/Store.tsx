@@ -1,21 +1,20 @@
 import React, { createContext, useReducer } from 'react';
 
-interface IUser {
-  name?: string;
-  email?: string;
-  role?: string;
-  picture?: string;
-  createdAt?: string;
-}
+import { User } from './graphql/types';
 
 type IState = typeof initialState;
 
 type IAction =
-  | { type: 'LOGIN_USER'; payload: IUser }
+  | { type: 'LOGIN_USER'; payload: User }
   | { type: 'IS_AUTH'; payload: boolean };
 
 const initialState = {
-  currentUser: {},
+  currentUser: {
+    name: '',
+    email: '',
+    role: '',
+    createdAt: ''
+  },
   isAuth: false
 };
 

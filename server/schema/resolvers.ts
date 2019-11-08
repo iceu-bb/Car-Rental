@@ -74,22 +74,24 @@ const resolvers: any = {
       return { token };
     },
 
-    signup: async (root: any, { input }: any): Promise<any> => {
+    register: async (root: any, { input }: any): Promise<any> => {
       // validate here
-      const { name, email, password, confirmPassword, picture } = input;
+
+      const { name, email, password, confirmPassword } = input;
+
       // 1) Check if user exists
       const user = await User.findOne({ email });
       if (user) {
         throw Error('There is account registered with this email');
       }
+
       // 2) Hash password and create user account
       const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
       const newUser = await new User({
         name,
         email,
-        password: hashedPassword,
-        picture
+        password: hashedPassword
       }).save();
       console.log('usre created', newUser);
 

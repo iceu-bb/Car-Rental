@@ -13,14 +13,13 @@ export const ProtectedRoute: React.FC<RouteProps> = ({
   component: Component,
   ...rest
 }: RouteProps) => {
-  const { state } = useContext(Store);
-
+  const { state, dispatch } = useContext(Store);
   const { data, loading, error } = useMeQuery();
   if (!Component) return <Redirect to='/login' />;
 
-  // If isAuth is true, return component
+  // If isAuth is true and we have user data, return component
 
-  if (state.isAuth) {
+  if (state.isAuth && state.currentUser.email !== '') {
     return (
       <Route
         render={(props: RouteComponentProps) => <Component {...props} />}
@@ -29,7 +28,7 @@ export const ProtectedRoute: React.FC<RouteProps> = ({
     );
   }
 
-  console.log('1st step');
+  console.log('p1st step');
 
   // If isAuth is false(page refreshed or 1st visit) ask server is token is valid
 
@@ -37,12 +36,15 @@ export const ProtectedRoute: React.FC<RouteProps> = ({
     console.log('2st loading null ');
     return null;
   }
-  if (data === undefined || error) {
+  if (data === undefined || error || !data.me) {
     console.log('2st error ');
     return <Redirect to='/login' />;
   }
 
   console.log('2st step');
+
+  dispatch({ type: 'IS_AUTH', payload: true });
+  dispatch({ type: 'LOGIN_USER', payload: data.me });
 
   return (
     <Route
