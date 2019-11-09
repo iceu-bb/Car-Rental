@@ -77,7 +77,7 @@ const resolvers: any = {
     register: async (root: any, { input }: any): Promise<any> => {
       // validate here
 
-      const { name, email, password, confirmPassword } = input;
+      const { email, password, confirmPassword } = input;
 
       // 1) Check if user exists
       const user = await User.findOne({ email });
@@ -89,7 +89,6 @@ const resolvers: any = {
       const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
       const newUser = await new User({
-        name,
         email,
         password: hashedPassword
       }).save();

@@ -27,7 +27,6 @@ input AddCarInput {
 }
 
 input RegisterInput {
-  name: String!
   email: String!
   password: String!
   passwordConfirm: String!

@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Cars } from '../components/Cars';
+import { HomepageHeading } from '../components/Header/HomePageHeading';
 
 export const MainPage: React.FC = () => {
   return (
     <>
-      <Cars />
+      <HomepageHeading mobile />
     </>
   );
 };
