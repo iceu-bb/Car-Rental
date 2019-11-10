@@ -29,6 +29,14 @@ const resolvers: any = {
       }
     ),
 
+    car: async (
+      root: any,
+      { input: { name, transmission } }: any
+    ): Promise<any> => {
+      const car = await Car.findOne({ name, transmission });
+      return car;
+    },
+
     cars: async () => {
       const cars = await Car.find({});
       return cars;

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { menuItems } from '../../helpers/constants';
 import {
@@ -6,8 +6,7 @@ import {
   Container,
   Menu,
   Responsive,
-  Segment,
-  Visibility
+  Segment
 } from 'semantic-ui-react';
 
 interface HeaderProps {
@@ -15,7 +14,6 @@ interface HeaderProps {
 }
 
 export const DesktopHeader: React.FC<HeaderProps> = ({ children }) => {
-  const [fixed, setFixed] = useState<boolean>(false);
   const { pathname } = useLocation();
 
   const renderMenuItem = useCallback(
@@ -40,56 +38,43 @@ export const DesktopHeader: React.FC<HeaderProps> = ({ children }) => {
 
   return (
     <Responsive minWidth={Responsive.onlyTablet.minWidth}>
-      <Visibility
-        once={false}
-        onBottomPassed={() => setFixed(true)}
-        onBottomPassedReverse={() => setFixed(false)}
+      <Segment
+        inverted
+        textAlign='center'
+        color='violet'
+        style={{ padding: '1rem 0' }}
+        vertical
       >
-        <Segment
-          inverted
-          textAlign='center'
-          color='violet'
-          style={{ padding: '1rem 0' }}
-          vertical
-        >
-          <Menu
-            fixed={fixed ? 'top' : undefined}
-            inverted={!fixed}
-            secondary={!fixed}
-            size='large'
-          >
-            <Container>
-              {/* render left-side menu items*/}
-              {renderMenuItems}
+        <Menu inverted secondary size='large'>
+          <Container>
+            {/* render left-side menu items*/}
+            {renderMenuItems}
 
-              {/* render right-side menu items*/}
-              <Menu.Item position='right'>
-                <Button
-                  as={Link}
-                  to='/login'
-                  inverted={!fixed}
-                  name='login'
-                  active={pathname === '/login'}
-                >
-                  Login
-                </Button>
-                <Button
-                  as={Link}
-                  to='/register'
-                  inverted={!fixed}
-                  primary={fixed}
-                  name='register'
-                  active={pathname === '/register'}
-                  style={{ marginLeft: '0.5em' }}
-                >
-                  Register
-                </Button>
-              </Menu.Item>
-            </Container>
-          </Menu>
-        </Segment>
-      </Visibility>
-
+            {/* render right-side menu items*/}
+            <Menu.Item position='right'>
+              <Button
+                as={Link}
+                to='/login'
+                inverted
+                name='login'
+                active={pathname === '/login'}
+              >
+                Login
+              </Button>
+              <Button
+                as={Link}
+                to='/register'
+                inverted
+                name='register'
+                active={pathname === '/register'}
+                style={{ marginLeft: '0.5em' }}
+              >
+                Register
+              </Button>
+            </Menu.Item>
+          </Container>
+        </Menu>
+      </Segment>
       {children}
     </Responsive>
   );

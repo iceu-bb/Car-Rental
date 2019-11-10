@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query Cars {
-    cars {
+  query Car($name: String!, $transmission: String!) {
+    car(input: { name: $name, transmission: $transmission }) {
       _id
       name
       producer

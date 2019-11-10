@@ -6,8 +6,9 @@ import { MainPage } from '../pages/MainPage';
 import { LoginForm } from '../pages/LoginForm';
 import { RegisterForm } from '../pages/RegisterForm';
 import { UserPanel } from '../pages/UserPanel';
+import { OurFleetPage } from '../pages/OurFleetPage';
 import { Header } from '../components/Header/index';
-import { Cars } from '../components/Cars';
+import { CarDetail } from '../components/Cars/CarDetail';
 
 export const Router: React.FC = () => {
   return (
@@ -15,10 +16,11 @@ export const Router: React.FC = () => {
       <Header>
         <Switch>
           <Route exact path='/' component={MainPage} />
-          <Route path='/login' component={LoginForm} />
-          <Route path='/register' component={RegisterForm} />
-          <Route path='/fleet' component={Cars} />
-          <ProtectedRoute path='/my-account' component={UserPanel} />
+          <Route exact path='/login' component={LoginForm} />
+          <Route exact path='/register' component={RegisterForm} />
+          <Route exact path='/vehicles' component={OurFleetPage} />
+          <Route exact path='/vehicles/:slug' component={CarDetail} />
+          <ProtectedRoute exact path='/my-account' component={UserPanel} />
         </Switch>
       </Header>
     </BrowserRouter>

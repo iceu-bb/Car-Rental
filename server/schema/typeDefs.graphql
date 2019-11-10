@@ -14,9 +14,24 @@ type LoginResponse {
 type Car {
   _id: ID
   name: String!
-  model: String!
+  producer: String!
+  type: String!
   year: Int!
   group: String!
+  passengers: Int!
+  baggages: Int!
+  doors: Int!
+  transmission: String!
+  propulsion: String!
+  incineration: Int
+  airconditioning: Boolean
+  ABS: Boolean
+  USB: Boolean
+  powerWindows: Boolean
+  remoteLocking: Boolean
+  Bluetooth: Boolean
+  cruiseControl: Boolean
+  electricCar: Boolean
 }
 
 input AddCarInput {
@@ -32,9 +47,15 @@ input RegisterInput {
   passwordConfirm: String!
 }
 
+input GetCarInput {
+  name: String!
+  transmission: String!
+}
+
 type Query {
   me: User
   cars: [Car!]!
+  car(input: GetCarInput): Car!
 }
 
 type Mutation {
