@@ -3,6 +3,7 @@ import User from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { secret } from '../env';
+import { ObjectId } from 'mongodb';
 
 const authenticated = (next: any) => (
   root: any,
@@ -40,8 +41,33 @@ const resolvers: any = {
     cars: async () => {
       const cars = await Car.find({});
       return cars;
+    },
+
+    relatedCars: async (root: any, { id, group }: any): Promise<any> => {
+      let cars;
+
+      // B => C ; increment letter in Ascii and return to String
+      const incrementedGroup = String.fromCharCode(group.charCodeAt(0) + 1);
+
+      try {
+        // find all cars from car group (except current selected car) and upper group
+        cars = await Car.find({
+          $or: [
+            {
+              group: group,
+              _id: { $ne: new ObjectId(id) }
+            },
+            { group: incrementedGroup }
+          ]
+        });
+      } catch (error) {
+        console.log(error);
+      }
+
+      return cars;
     }
   },
+
   Mutation: {
     addCar: async (root: any, { input }: any): Promise<any> => {
       let newCar;

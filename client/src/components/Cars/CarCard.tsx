@@ -56,7 +56,7 @@ export const CarCard = React.memo<CarCardProps>(({ car }) => {
   return (
     <Card>
       <Image
-        src={`./assets/${name}.png`}
+        src={`${process.env.PUBLIC_URL}/assets/${name}.png`}
         wrapped
         ui={false}
         alt={`${producer} ${name}`}

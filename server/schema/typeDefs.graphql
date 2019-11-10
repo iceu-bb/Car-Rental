@@ -56,6 +56,7 @@ type Query {
   me: User
   cars: [Car!]!
   car(input: GetCarInput): Car!
+  relatedCars(id: ID, group: String!): [Car!]
 }
 
 type Mutation {

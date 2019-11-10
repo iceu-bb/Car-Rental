@@ -11,6 +11,7 @@ import {
 } from 'semantic-ui-react';
 import { features } from '../../helpers/constants';
 import { RouteComponentProps } from 'react-router-dom';
+import { RelatedCars } from './RelatedCars';
 
 interface IndexedCar extends Car {
   [index: string]: any;
@@ -68,7 +69,7 @@ export const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
         <Grid
           divided='vertically'
           stackable
-          style={{ maxWidth: 1200, margin: '0 auto', textAlign: 'center' }}
+          style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}
         >
           <Grid.Row columns={2}>
             <Grid.Column>
@@ -117,6 +118,7 @@ export const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
         </Divider>
 
         {/* 3 - TODO - Related Vehicles */}
+        <RelatedCars carGroup={car.group} carId={car._id} />
       </Container>
     </Segment>
   );
