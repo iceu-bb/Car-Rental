@@ -13,6 +13,7 @@ import {
 
 interface HeaderProps {
   children: ReactNode;
+  isAuth: boolean;
 }
 
 export const MobileHeader: React.FC<HeaderProps> = ({ children }) => {

@@ -6,14 +6,16 @@ import {
   Container,
   Menu,
   Responsive,
-  Segment
+  Segment,
+  Icon
 } from 'semantic-ui-react';
 
 interface HeaderProps {
   mobile?: boolean;
+  isAuth: boolean;
 }
 
-export const DesktopHeader: React.FC<HeaderProps> = ({ children }) => {
+export const DesktopHeader: React.FC<HeaderProps> = ({ children, isAuth }) => {
   const { pathname } = useLocation();
 
   const renderMenuItem = useCallback(
@@ -31,6 +33,7 @@ export const DesktopHeader: React.FC<HeaderProps> = ({ children }) => {
     [pathname]
   );
 
+  // ???
   const renderMenuItems = useMemo(
     () => menuItems.slice(0, 4).map(renderMenuItem),
     [renderMenuItem]
@@ -52,25 +55,45 @@ export const DesktopHeader: React.FC<HeaderProps> = ({ children }) => {
 
             {/* render right-side menu items*/}
             <Menu.Item position='right'>
-              <Button
-                as={Link}
-                to='/login'
-                inverted
-                name='login'
-                active={pathname === '/login'}
-              >
-                Login
-              </Button>
-              <Button
-                as={Link}
-                to='/register'
-                inverted
-                name='register'
-                active={pathname === '/register'}
-                style={{ marginLeft: '0.5em' }}
-              >
-                Register
-              </Button>
+              {!isAuth ? (
+                <>
+                  <Button
+                    as={Link}
+                    to='/login'
+                    inverted
+                    name='login'
+                    active={pathname === '/login'}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    as={Link}
+                    to='/register'
+                    inverted
+                    name='register'
+                    active={pathname === '/register'}
+                    style={{ marginLeft: '0.5em' }}
+                  >
+                    Register
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  circular
+                  icon
+                  color='violet'
+                  inverted
+                  as={Link}
+                  to='/my-account'
+                  name='my-account'
+                  active={pathname === '/my-account'}
+                  style={{
+                    padding: 13
+                  }}
+                >
+                  <Icon name='user' size='large' inverted />
+                </Button>
+              )}
             </Menu.Item>
           </Container>
         </Menu>

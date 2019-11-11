@@ -5,11 +5,12 @@ import { MobileHeader } from './MobileHeader';
 
 interface HeaderProps {
   children: ReactNode;
+  isAuth: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ children }) => (
+export const Header: React.FC<HeaderProps> = ({ children, isAuth }) => (
   <div>
-    <DesktopHeader>{children}</DesktopHeader>
-    <MobileHeader>{children}</MobileHeader>
+    <DesktopHeader isAuth={isAuth}>{children}</DesktopHeader>
+    <MobileHeader isAuth={isAuth}>{children}</MobileHeader>
   </div>
 );

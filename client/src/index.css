@@ -15,3 +15,9 @@ body {
   font-size: 1.6rem;
   background-color: lightgrey !important;
 }
+
+.wrapped {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

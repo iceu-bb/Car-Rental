@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext, useEffect, useCallback } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
+import { Store } from '../Store';
 
 import { MainPage } from '../pages/MainPage';
 import { LoginForm } from '../pages/LoginForm';
@@ -11,9 +12,24 @@ import { Header } from '../components/Header/index';
 import { CarDetail } from '../components/Cars/CarDetail';
 
 export const Router: React.FC = () => {
+  const { state, dispatch } = useContext(Store);
+
+  const checkLoginToken = useCallback(() => {
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      dispatch({ type: 'IS_AUTH', payload: true });
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    checkLoginToken();
+  }, [checkLoginToken]);
+
+  console.log(state);
+
   return (
     <BrowserRouter>
-      <Header>
+      <Header isAuth={state.isAuth}>
         <Switch>
           <Route exact path='/' component={MainPage} />
           <Route exact path='/login' component={LoginForm} />
