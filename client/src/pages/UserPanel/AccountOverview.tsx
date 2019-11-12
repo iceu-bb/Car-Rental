@@ -34,7 +34,7 @@ export const AccountOverview: React.FC<Props> = () => {
               Gold Account
             </Header>
             <List>
-              <List.Item icon='user'>
+              <List.Item>
                 With Classic Gold:
                 <List bulleted>
                   <List.Item>€15 money off voucher*</List.Item>
@@ -47,7 +47,7 @@ export const AccountOverview: React.FC<Props> = () => {
                   </List.Item>
                 </List>
               </List.Item>
-              <List.Item icon='marker'>
+              <List.Item>
                 With Premium Gold:
                 <List bulleted>
                   <List.Item>Guaranteed vehicle upgrade****</List.Item>

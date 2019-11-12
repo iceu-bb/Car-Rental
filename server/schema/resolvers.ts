@@ -129,6 +129,22 @@ const resolvers: any = {
       console.log('usre created', newUser);
 
       return newUser;
+    },
+
+    updatePersonalData: async (root: any, { input }: any): Promise<any> => {
+      let updatedUser;
+      const { id, ...rest } = input;
+      try {
+        updatedUser = await User.findByIdAndUpdate(
+          id,
+          { ...rest },
+          { new: true }
+        );
+      } catch (error) {
+        console.log(error);
+        throw new Error('Can not create new car');
+      }
+      return updatedUser;
     }
   }
 };

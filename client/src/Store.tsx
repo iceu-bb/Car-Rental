@@ -10,11 +10,12 @@ type IAction =
 
 const initialState = {
   currentUser: {
+    _id: '',
     name: '',
     email: '',
     role: '',
     createdAt: ''
-  },
+  } as User,
   isAuth: false
 };
 

@@ -5,6 +5,11 @@ type User {
   picture: String
   role: String!
   createdAt: String!
+  title: String
+  firstName: String
+  lastName: String
+  dateOfBirth: String
+  country: String
 }
 
 type LoginResponse {
@@ -52,6 +57,15 @@ input GetCarInput {
   transmission: String!
 }
 
+input PersonalDataInput {
+  id: ID!
+  title: String
+  firstName: String
+  lastName: String
+  dateOfBirth: String
+  country: String
+}
+
 type Query {
   me: User
   cars: [Car!]!
@@ -63,4 +77,5 @@ type Mutation {
   addCar(input: AddCarInput!): Car
   login(email: String!, password: String!): LoginResponse!
   register(input: RegisterInput!): User
+  updatePersonalData(input: PersonalDataInput!): User
 }
