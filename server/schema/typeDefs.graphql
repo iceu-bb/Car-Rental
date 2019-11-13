@@ -9,7 +9,17 @@ type User {
   firstName: String
   lastName: String
   dateOfBirth: String
+  countryOfBirth: String
+  telephoneNumber: Int
+  addressLine1: String
+  addressLine2: String
+  city: String
+  region: String
+  postcode: String
   country: String
+  newsletterCheck: Boolean
+  emailCheck: Boolean
+  smsCheck: Boolean
 }
 
 type LoginResponse {
@@ -57,13 +67,23 @@ input GetCarInput {
   transmission: String!
 }
 
-input PersonalDataInput {
+input UserDataInput {
   id: ID!
   title: String
   firstName: String
   lastName: String
   dateOfBirth: String
+  countryOfBirth: String
+  telephoneNumber: Int
+  addressLine1: String
+  addressLine2: String
+  city: String
+  region: String
+  postcode: String
   country: String
+  newsletterCheck: Boolean
+  emailCheck: Boolean
+  smsCheck: Boolean
 }
 
 type Query {
@@ -77,5 +97,11 @@ type Mutation {
   addCar(input: AddCarInput!): Car
   login(email: String!, password: String!): LoginResponse!
   register(input: RegisterInput!): User
-  updatePersonalData(input: PersonalDataInput!): User
+  updateUserData(input: UserDataInput!): Boolean
+  updateUserPassword(
+    id: ID!
+    newPassword: String!
+    newPasswordConfirm: String!
+    currentPassword: String!
+  ): Boolean
 }

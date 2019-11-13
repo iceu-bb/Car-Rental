@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
   name: string;
@@ -11,7 +11,17 @@ export interface IUser extends Document {
   firstName?: string;
   lastName?: string;
   dateOfBirth?: string;
+  countryOfBirth?: string;
+  telephoneNumber?: number;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  region?: string;
+  postcode?: string;
   country?: string;
+  newsletterCheck?: boolean;
+  emailCheck?: boolean;
+  smsCheck?: boolean;
 }
 
 const UserSchema: Schema = new Schema<IUser>(
@@ -35,12 +45,12 @@ const UserSchema: Schema = new Schema<IUser>(
     role: {
       type: String,
       required: true,
-      default: 'user',
-      enum: ['user', 'admin', 'root']
+      default: "user",
+      enum: ["user", "admin", "root"]
     },
     title: {
       type: String,
-      enum: ['Mr', 'Mrs', 'Other']
+      enum: ["Mr", "Mrs", "Miss", "Dr", "Ms", "Other"]
     },
     firstName: {
       type: String
@@ -51,8 +61,38 @@ const UserSchema: Schema = new Schema<IUser>(
     dateOfBirth: {
       type: String
     },
+    countryOfBirth: {
+      type: String
+    },
+    telephoneNumber: {
+      type: Number
+    },
+    addressLine1: {
+      type: String
+    },
+    addressLine2: {
+      type: String
+    },
+    city: {
+      type: String
+    },
+    region: {
+      type: String
+    },
+    postcode: {
+      type: String
+    },
     country: {
       type: String
+    },
+    newsletterCheck: {
+      type: Boolean
+    },
+    emailCheck: {
+      type: Boolean
+    },
+    smsCheck: {
+      type: Boolean
     }
   },
   {
@@ -60,4 +100,4 @@ const UserSchema: Schema = new Schema<IUser>(
   }
 );
 
-export default mongoose.model<IUser>('User', UserSchema);
+export default mongoose.model<IUser>("User", UserSchema);

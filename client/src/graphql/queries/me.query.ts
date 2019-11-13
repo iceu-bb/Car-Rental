@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export default gql`
   query Me {
@@ -13,7 +13,17 @@ export default gql`
       firstName
       lastName
       dateOfBirth
+      countryOfBirth
+      telephoneNumber
+      addressLine1
+      addressLine2
+      city
+      region
+      postcode
       country
+      newsletterCheck
+      emailCheck
+      smsCheck
     }
   }
 `;

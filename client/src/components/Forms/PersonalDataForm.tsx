@@ -1,22 +1,25 @@
-import React, { useEffect, useCallback, useState } from "react";
-import { Form, Button, Message } from "semantic-ui-react";
-import useForm from "react-hook-form";
-import * as yup from "yup";
-import { mappedCountriesList } from "../../helpers/countriesList";
-import { useUpdatePersonalDataMutation, User } from "../../graphql/types";
+import React, { useEffect, useCallback, useState } from 'react';
+import { Form, Button, Message } from 'semantic-ui-react';
+import useForm from 'react-hook-form';
+import * as yup from 'yup';
+import { mappedCountriesList } from '../../helpers/countriesList';
+import { useUpdateUserDataMutation, User } from '../../graphql/types';
 
 interface IPersonalData {
   title: string | null | undefined;
   firstName: string | null | undefined;
   lastName: string | null | undefined;
   dateOfBirth: string | null | undefined;
-  country: string | null | undefined;
+  countryOfBirth: string | null | undefined;
 }
 
 const titleOptions = [
-  { key: "Mr", text: "Mr", value: "Mr" },
-  { key: "Mrs", text: "Mrs", value: "Mrs" },
-  { key: "Other", text: "Other", value: "Other" }
+  { key: 'Mr', text: 'Mr', value: 'Mr' },
+  { key: 'Mrs', text: 'Mrs', value: 'Mrs' },
+  { key: 'Miss', text: 'Miss', value: 'Miss' },
+  { key: 'Dr', text: 'Dr', value: 'Dr' },
+  { key: 'Ms', text: 'Ms', value: 'Ms' },
+  { key: 'Other', text: 'Other', value: 'Other' }
 ];
 
 const SignupSchema = yup.object().shape({
@@ -30,7 +33,7 @@ const SignupSchema = yup.object().shape({
     .required()
     .max(32),
   dateOfBirth: yup.string().required(),
-  country: yup.string().required()
+  countryOfBirth: yup.string().required()
 });
 
 interface Props {
@@ -38,7 +41,7 @@ interface Props {
 }
 
 export const PersonalDataForm: React.FC<Props> = ({ user }) => {
-  const { title, firstName, lastName, dateOfBirth, country } = user;
+  const { title, firstName, lastName, dateOfBirth, countryOfBirth } = user;
 
   const [message, setMessage] = useState(false);
 
@@ -56,23 +59,24 @@ export const PersonalDataForm: React.FC<Props> = ({ user }) => {
       firstName,
       lastName,
       dateOfBirth,
-      country
+      countryOfBirth
     }
   });
 
-  const [updatePersonalData] = useUpdatePersonalDataMutation();
+  const [updateUserData] = useUpdateUserDataMutation();
 
   const onSubmit = useCallback(
     async (formData: IPersonalData) => {
       console.log(formData);
-      await updatePersonalData({
+      const { data } = await updateUserData({
         variables: { id: user._id!, ...formData }
       });
+      console.log(data, 'update');
       setMessage(true);
       // TODO positive message or Error
       reset();
     },
-    [updatePersonalData, user._id]
+    [updateUserData, user._id]
   );
 
   // TODO debounce
@@ -84,11 +88,11 @@ export const PersonalDataForm: React.FC<Props> = ({ user }) => {
   );
 
   useEffect(() => {
-    register({ name: "title" });
-    register({ name: "firstName" });
-    register({ name: "lastName" });
-    register({ name: "dateOfBirth" });
-    register({ name: "country" });
+    register({ name: 'title' });
+    register({ name: 'firstName' });
+    register({ name: 'lastName' });
+    register({ name: 'dateOfBirth' });
+    register({ name: 'countryOfBirth' });
   }, [register]);
 
   console.log(isSubmitting);
@@ -100,63 +104,63 @@ export const PersonalDataForm: React.FC<Props> = ({ user }) => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <Form.Select
-        name="title"
-        defaultValue={title as string | number | boolean}
-        label="Title"
+        name='title'
+        defaultValue={title as string}
+        label='Title'
         options={titleOptions}
-        placeholder="Title"
+        placeholder='Title'
         onChange={onChange}
         error={errors.title && errors.title.message}
       />
 
       <Form.Input
-        name="firstName"
+        name='firstName'
         defaultValue={firstName}
-        label="First name"
-        placeholder="First name"
+        label='First name'
+        placeholder='First name'
         onChange={onChange}
         error={errors.firstName && errors.firstName.message}
       />
 
       <Form.Input
-        name="lastName"
+        name='lastName'
         defaultValue={lastName}
-        label="Last name"
-        placeholder="Last name"
+        label='Last name'
+        placeholder='Last name'
         onChange={onChange}
         error={errors.lastName && errors.lastName.message}
       />
 
       <Form.Input
-        name="dateOfBirth"
-        label="Date of birth"
+        name='dateOfBirth'
+        label='Date of birth'
         defaultValue={dateOfBirth}
-        placeholder="Date of birth"
+        placeholder='Date of birth'
         onChange={onChange}
         error={errors.dateOfBirth && errors.dateOfBirth.message}
       />
 
       <Form.Select
-        name="country"
+        name='countryOfBirth'
         search
-        label="Country"
-        defaultValue={country as string | number | boolean}
+        label='Country'
+        defaultValue={countryOfBirth as string}
         options={mappedCountriesList}
-        placeholder="Country"
+        placeholder='Country of birth'
         onChange={onChange}
-        error={errors.country && errors.country.message}
+        error={errors.countryOfBirth && errors.countryOfBirth.message}
       />
 
       <Message
         success
-        header="Form Updated"
-        content="Your data has been saved correctly"
+        header='Form Updated'
+        content='Your data has been saved correctly'
       />
 
       <Button
-        color="violet"
-        type="submit"
-        size="big"
+        color='violet'
+        type='submit'
+        size='big'
         disabled={Object.keys(errors).length > 0 || !dirty}
       >
         Update

@@ -2,6 +2,8 @@ import React, { useState, useContext } from "react";
 import { Store } from "../../Store";
 import { Container, Accordion, Icon } from "semantic-ui-react";
 import { PersonalDataForm } from "../../components/Forms/PersonalDataForm";
+import { ContactDetailForm } from "../../components/Forms/ContactDetailForm";
+import { UpdatePasswordForm } from "../../components/Forms/UpdatePasswordForm";
 
 export const AccountSettings: React.FC = () => {
   const { state } = useContext(Store);
@@ -39,7 +41,7 @@ export const AccountSettings: React.FC = () => {
           Contact Details
         </Accordion.Title>
         <Accordion.Content active={activeIndex === 1}>
-          <p>There</p>
+          <ContactDetailForm user={state.currentUser} />
         </Accordion.Content>
 
         {/*3st accordion */}
@@ -52,7 +54,7 @@ export const AccountSettings: React.FC = () => {
           Update Password
         </Accordion.Title>
         <Accordion.Content active={activeIndex === 2}>
-          <p>Three</p>
+          <UpdatePasswordForm userId={state.currentUser._id} />
         </Accordion.Content>
 
         {/*4st accordion */}
