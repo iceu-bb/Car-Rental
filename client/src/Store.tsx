@@ -4,9 +4,19 @@ import { User } from './graphql/types';
 
 type IState = typeof initialState;
 
+interface BookingInfo {
+  startDay: string;
+  returnDay: string;
+  startHour: string;
+  returnHour: string;
+  renterAge: string;
+  discountCode: string;
+}
+
 type IAction =
   | { type: 'LOGIN_USER'; payload: User }
-  | { type: 'IS_AUTH'; payload: boolean };
+  | { type: 'IS_AUTH'; payload: boolean }
+  | { type: 'BOOKING_STEP_1'; payload: BookingInfo };
 
 const initialState = {
   currentUser: {
@@ -16,7 +26,14 @@ const initialState = {
     role: '',
     createdAt: ''
   } as User,
-  isAuth: false
+  isAuth: false,
+  bookingInfo: {
+    startDay: '17-12-2019',
+    returnDay: '27-12-2019',
+    startHour: '10:40',
+    returnHour: '20:30',
+    renterAge: '25+'
+  } as BookingInfo
 };
 
 const defaultDispatch: React.Dispatch<IAction> = () => initialState;
@@ -37,6 +54,11 @@ export default function reducer(state: IState, action: IAction): IState {
       return {
         ...state,
         isAuth: action.payload
+      };
+    case 'BOOKING_STEP_1':
+      return {
+        ...state,
+        bookingInfo: action.payload
       };
     default:
       return state;

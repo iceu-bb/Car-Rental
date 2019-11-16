@@ -1,35 +1,24 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 
-import { Button, Container, Header } from 'semantic-ui-react';
+import { Container, Segment } from 'semantic-ui-react';
+import { DateBookingForm } from '../Forms/DateBookingForm';
 
 interface HeaderMobileProps {
   mobile?: boolean;
 }
 
-export const HomepageHeading: React.FC<HeaderMobileProps> = ({ mobile }) => (
-  <Container text>
-    <Header
-      as='h1'
-      content='Rental Cars'
-      inverted
+export const HomepageHeading: React.FC<HeaderMobileProps> = ({ mobile }) => {
+  return (
+    <Segment
       style={{
-        fontSize: mobile ? '2em' : '4em',
-        fontWeight: 'normal',
-        marginTop: mobile ? '1.5em' : '3em'
+        minHeight: '90vh',
+        backgroundColor: 'teal',
+        margin: 0
       }}
-    />
-    <Header
-      as='h2'
-      content='The best cat rental in Iceland'
-      inverted
-      style={{
-        fontSize: mobile ? '1.5em' : '1.7em',
-        fontWeight: 'normal',
-        marginTop: mobile ? '0.5em' : '1.5em'
-      }}
-    />
-    <Button primary size='large'>
-      Get Started
-    </Button>
-  </Container>
-);
+    >
+      <Container style={{ margin: '0 auto' }}>
+        <DateBookingForm />
+      </Container>
+    </Segment>
+  );
+};

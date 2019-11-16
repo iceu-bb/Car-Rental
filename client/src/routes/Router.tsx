@@ -10,6 +10,7 @@ import { UserPanel } from '../pages/UserPanel';
 import { OurFleetPage } from '../pages/OurFleetPage';
 import { Header } from '../components/Header/index';
 import { CarDetail } from '../components/Cars/CarDetail';
+import { BookingPage } from '../pages/BookingPage';
 
 export const Router: React.FC = () => {
   const { state, dispatch } = useContext(Store);
@@ -37,6 +38,7 @@ export const Router: React.FC = () => {
           <Route exact path='/vehicles' component={OurFleetPage} />
           <Route exact path='/vehicles/:slug' component={CarDetail} />
           <ProtectedRoute exact path='/my-account' component={UserPanel} />
+          <Route path='/booking/:step' component={BookingPage} />
         </Switch>
       </Header>
     </BrowserRouter>
