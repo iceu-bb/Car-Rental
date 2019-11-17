@@ -13,6 +13,7 @@ import { Currency } from '../components/Booking-Right-Column/Currency';
 import { PickupReturn } from '../components/Booking-Right-Column/PickupReturn';
 import { VehicleDetails } from '../components/Booking-Right-Column/VehicleDetails';
 import { QuoteDetails } from '../components/Booking-Right-Column/QuoteDetails';
+import { Discount } from '../components/Booking-Right-Column/Discount';
 
 // TODO: similar component to Our Fleet Page
 export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
@@ -74,6 +75,7 @@ export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
             <PickupReturn bookingInfo={state.bookingInfo} />
             <VehicleDetails />
             <QuoteDetails />
+            <Discount />
           </Grid.Column>
         </Grid>
       </Container>

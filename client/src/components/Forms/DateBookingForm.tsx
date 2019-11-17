@@ -12,7 +12,6 @@ interface IndexedDateObject {
   returnDay: string;
   returnHour: string;
   renterAge: string;
-  discountCode: string;
   [index: string]: any;
 }
 
@@ -30,8 +29,7 @@ export const DateBookingForm = () => {
     startHour: '',
     returnDay: '',
     returnHour: '',
-    renterAge: '',
-    discountCode: ''
+    renterAge: ''
   } as IndexedDateObject);
 
   const handleChange = (e: any, { name, value }: any) => {
@@ -129,13 +127,6 @@ export const DateBookingForm = () => {
             options={ageOptions}
             placeholder='Renter Age'
             onChange={handleChange}
-          />
-          <Form.Input
-            name='discountCode'
-            placeholder='Discount Code'
-            onChange={handleChange}
-            icon='money'
-            iconPosition='left'
           />
         </Form.Group>
         <Button type='submit' size='huge' color='violet'>

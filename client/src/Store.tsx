@@ -10,7 +10,6 @@ interface BookingInfo {
   startHour: string;
   returnHour: string;
   renterAge: string;
-  discountCode: string;
 }
 
 interface BookingCar {

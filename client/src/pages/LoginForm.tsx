@@ -20,7 +20,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ history }) => {
   const [login] = useLoginMutation();
 
   const email = 'test@test.com';
-  const password = 'test';
+  const password = 'test12345A';
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>): Promise<any> => {
     e.preventDefault();
