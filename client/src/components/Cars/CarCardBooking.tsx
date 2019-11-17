@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { Car } from '../../graphql/types';
 import {
@@ -10,7 +10,8 @@ import {
   Icon,
   Grid
 } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { Store } from '../../Store';
 
 const StyledList = styled(List)`
   list-style: none;
@@ -45,6 +46,10 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
     transmission
   } = car;
 
+  const { dispatch } = useContext(Store);
+
+  const history = useHistory();
+
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const handleClick = (e: any, titleProps: any) => {
@@ -64,6 +69,12 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
     ),
     [baggages, doors, passengers, transmission]
   );
+
+  const handleBookNowClick = () => {
+    // 1) handle total amount
+    dispatch({ type: 'BOOKING_STEP_2', payload: { name, transmission } });
+    history.push('/booking/extras');
+  };
 
   if (!car.name) {
     return null;
@@ -159,7 +170,7 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
               <p>
                 <span>ISK</span> 10000
               </p>
-              <Button as={Link} to='/booking/extras' color='yellow'>
+              <Button onClick={() => handleBookNowClick()} color='yellow'>
                 Book Now
               </Button>
             </div>
@@ -180,7 +191,7 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
               <p>
                 <span>ISK</span> 8000
               </p>
-              <Button as={Link} to='/booking/extras' color='yellow'>
+              <Button onClick={() => handleBookNowClick()} color='yellow'>
                 Book Now
               </Button>
             </div>
@@ -205,7 +216,7 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
               <p>
                 <span>ISK</span> 15000
               </p>
-              <Button as={Link} to='/booking/extras' color='yellow'>
+              <Button onClick={() => handleBookNowClick()} color='yellow'>
                 Book Now
               </Button>
             </div>

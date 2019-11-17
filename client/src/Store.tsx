@@ -13,10 +13,16 @@ interface BookingInfo {
   discountCode: string;
 }
 
+interface BookingCar {
+  name: string;
+  transmission: string;
+}
+
 type IAction =
   | { type: 'LOGIN_USER'; payload: User }
   | { type: 'IS_AUTH'; payload: boolean }
-  | { type: 'BOOKING_STEP_1'; payload: BookingInfo };
+  | { type: 'BOOKING_STEP_1'; payload: BookingInfo }
+  | { type: 'BOOKING_STEP_2'; payload: BookingCar };
 
 const initialState = {
   currentUser: {
@@ -33,7 +39,8 @@ const initialState = {
     startHour: '10:40',
     returnHour: '20:30',
     renterAge: '25+'
-  } as BookingInfo
+  } as BookingInfo,
+  bookingCar: {} as BookingCar
 };
 
 const defaultDispatch: React.Dispatch<IAction> = () => initialState;
@@ -59,6 +66,11 @@ export default function reducer(state: IState, action: IAction): IState {
       return {
         ...state,
         bookingInfo: action.payload
+      };
+    case 'BOOKING_STEP_2':
+      return {
+        ...state,
+        bookingCar: action.payload
       };
     default:
       return state;
