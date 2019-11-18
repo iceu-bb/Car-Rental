@@ -73,9 +73,18 @@ export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
           <Grid.Column width={5}>
             <Currency />
             <PickupReturn bookingInfo={state.bookingInfo} />
-            <VehicleDetails />
-            <QuoteDetails />
-            <Discount />
+            {state.step > 1 && (
+              <>
+                <VehicleDetails />
+                <QuoteDetails
+                  totalDays={state.totalDays}
+                  totalExtras={state.totalExtras}
+                  days={state.bookingInfo.days}
+                  fullCoverage={state.fullCoverage}
+                />
+              </>
+            )}
+            {state.step > 2 && <Discount />}
           </Grid.Column>
         </Grid>
       </Container>

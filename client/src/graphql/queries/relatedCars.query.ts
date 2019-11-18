@@ -8,6 +8,7 @@ export default gql`
       producer
       type
       year
+      pricePerDay
       group
       passengers
       baggages

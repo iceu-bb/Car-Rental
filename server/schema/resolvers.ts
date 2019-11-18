@@ -1,9 +1,10 @@
-import Car from "../models/car";
-import User from "../models/user";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { secret } from "../env";
-import { ObjectId } from "mongodb";
+import Car from '../models/car';
+import User from '../models/user';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { secret } from '../env';
+import { ObjectId } from 'mongodb';
+import moment from 'moment';
 
 const authenticated = (next: any) => (
   root: any,
@@ -12,7 +13,7 @@ const authenticated = (next: any) => (
   info: any
 ) => {
   if (!ctx.decodedToken) {
-    throw new Error("You must be logged in");
+    throw new Error('You must be logged in');
   }
   return next(root, args, ctx, info);
 };
@@ -77,7 +78,7 @@ const resolvers: any = {
         }).save();
       } catch (error) {
         console.log(error);
-        throw new Error("Can not create new car");
+        throw new Error('Can not create new car');
       }
       return newCar;
     },
@@ -88,7 +89,7 @@ const resolvers: any = {
       { res }: any
     ): Promise<any> => {
       // 1) Check if user with provided email exists
-      const user = await User.findOne({ email }).select("+password");
+      const user = await User.findOne({ email }).select('+password');
       if (!user) {
         throw Error(`There is no user registered with email: ${email}`);
       }
@@ -97,12 +98,12 @@ const resolvers: any = {
       const matchPasswords = bcrypt.compareSync(password, user.password);
 
       if (!matchPasswords) {
-        throw new Error("Password is incorrect!");
+        throw new Error('Password is incorrect!');
       }
 
       // 3) generate Token
       const token = jwt.sign({ userId: user._id }, secret, {
-        expiresIn: "7d"
+        expiresIn: '7d'
       });
 
       return { token };
@@ -116,7 +117,7 @@ const resolvers: any = {
       // 1) Check if user exists
       const user = await User.findOne({ email });
       if (user) {
-        throw Error("There is account registered with this email");
+        throw Error('There is account registered with this email');
       }
 
       // 2) Hash password and create user account
@@ -126,7 +127,7 @@ const resolvers: any = {
         email,
         password: hashedPassword
       }).save();
-      console.log("usre created", newUser);
+      console.log('usre created', newUser);
 
       return newUser;
     },
@@ -158,7 +159,7 @@ const resolvers: any = {
       }
 
       // 2) check if currentPassword is correct
-      const user = await User.findOne({ _id: id }).select("+password");
+      const user = await User.findOne({ _id: id }).select('+password');
       if (!user) {
         throw new Error(
           `Sorry we have problem to authenticate your account in system. Try again `
@@ -168,7 +169,7 @@ const resolvers: any = {
       const matchPasswords = bcrypt.compareSync(currentPassword, user.password);
 
       if (!matchPasswords) {
-        throw new Error("Current Password is incorrect");
+        throw new Error('Current Password is incorrect');
       }
 
       // 4) hash new Password and update password
@@ -180,10 +181,122 @@ const resolvers: any = {
       try {
         await User.findByIdAndUpdate(id, { password: hashedPassword });
       } catch (error) {
-        throw new Error("We encouter problem to update your password.");
+        throw new Error('We encouter problem to update your password.');
       }
 
       return true;
+    },
+
+    checkBookingDateForm: async (root: any, { input }: any): Promise<any> => {
+      const { startDay, startHour, returnDay, returnHour, renterAge } = input;
+
+      // check fields
+      if (!startDay || !startHour || !returnDay || !returnHour) {
+        return { error: 'Please select all dates' };
+      }
+      if (!renterAge) return { error: "Please select the driver's age" };
+
+      //check valid type (regex)
+      const testRegexStartDay = /^\d{2}\-\d{2}\-\d{4}$/.test(startDay);
+      const testRegexStartHour = /^\d{2}\:\d{2}$/.test(startHour);
+      const testRegexReturnDay = /^\d{2}\-\d{2}\-\d{4}$/.test(returnDay);
+      const testRegexReturnHour = /^\d{2}\:\d{2}$/.test(returnHour);
+      if (!testRegexStartDay)
+        return { error: 'You type wrong format for Pickup Date' };
+      if (!testRegexStartHour)
+        return { error: 'You type wrong format for Pickup Time' };
+      if (!testRegexReturnDay)
+        return { error: 'You type wrong format for Return Date' };
+      if (!testRegexReturnHour)
+        return { error: 'You type wrong format for Return Time' };
+
+      // CONSTANTS
+      const tomorrow = moment().add(1, 'days');
+      const yearForward = moment().add(1, 'years');
+      const formattedStartDay = moment(startDay, 'DD-MM-YYYY').format();
+      const formattedReturnDay = moment(returnDay, 'DD-MM-YYYY').format();
+
+      // check if Return Day is not lesser than Start Day
+      if (
+        moment(formattedStartDay).format('X') >
+        moment(formattedReturnDay).format('X')
+      ) {
+        return {
+          error: 'Return date cannot be before Pickup Date'
+        };
+      }
+
+      // check if booking is not within 24h
+      if (
+        Number(moment(tomorrow).format('X')) >
+        Number(moment(formattedStartDay).format('X')) +
+          Number(moment.duration(startHour).asSeconds())
+      ) {
+        return {
+          error: 'We are sorry but you cannot reserve car within 24h from now'
+        };
+      }
+
+      //check min anx max days if not exceeded
+      if (
+        moment(formattedStartDay).isAfter(yearForward) ||
+        moment(formattedReturnDay).isAfter(yearForward)
+      ) {
+        return {
+          error:
+            'We are sorry but you cannot reserve car after a 1 year from now. Please call us to make an agreement'
+        };
+      }
+
+      // check if it is the same day
+      if (
+        moment(formattedStartDay).diff(moment(formattedReturnDay), 'days') == 0
+      ) {
+        // check if hours are ok
+        if (
+          Number(moment.duration(startHour).asSeconds()) >
+          Number(moment.duration(returnHour).asSeconds())
+        ) {
+          return {
+            error: 'Please check the time of booking'
+          };
+        }
+
+        //check if it is not below 1 hr
+        if (
+          Number(moment.duration(returnHour).asSeconds()) -
+            Number(moment.duration(startHour).asSeconds()) <
+          3601
+        ) {
+          return {
+            error:
+              'We are sorry but you cannot reserve a car for less than 1 hour'
+          };
+        }
+      }
+
+      //---- COUNT DAYS------
+
+      let days = Number(
+        moment(formattedReturnDay).diff(moment(formattedStartDay), 'days')
+      );
+      // check if booking is longer that 50days
+      if (days > 49) {
+        return {
+          error:
+            'If you are booking a car longer than 50 days, please call our service to reserve a car and get special discount'
+        };
+      }
+
+      // returnTime should be lesser than startTime  -if no add 1day
+      if (
+        Number(moment.duration(startHour).asSeconds()) <
+        Number(moment.duration(returnHour).asSeconds())
+      ) {
+        days++;
+      }
+
+      return { days };
     }
   }
 };

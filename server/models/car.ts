@@ -18,6 +18,10 @@ const CarSchema = new Schema({
     type: Number,
     required: true
   },
+  pricePerDay: {
+    type: Number,
+    required: true
+  },
   group: {
     type: String,
     required: true

@@ -1,9 +1,64 @@
 import React from 'react';
-import { Segment } from 'semantic-ui-react';
+import { Segment, Divider, Header, List } from 'semantic-ui-react';
+import { extrasItems } from '../../helpers/constants';
 
-interface Props {}
+interface Props {
+  totalDays: number;
+  totalExtras: any;
+  days: number;
+  fullCoverage: boolean;
+}
 
-export const QuoteDetails: React.FC<Props> = () => {
+export const QuoteDetails: React.FC<Props> = ({
+  totalDays,
+  totalExtras,
+  days,
+  fullCoverage
+}) => {
+  // total Amount of Exrtas, useCallback?
+  const ExtrasTOTAL = Object.entries(totalExtras).reduce(
+    (prev, pair: any, currentIndex) => {
+      const [key, value] = pair;
+
+      //check system ('day' or 'unit')
+      return extrasItems[currentIndex].system === 'day'
+        ? prev + days * value
+        : prev + value;
+    },
+    0
+  );
+
+  const renderPricingList = () => {
+    return extrasItems.map(item => {
+      const itemValue = totalExtras[item.symbol];
+      const isRender = itemValue !== 0;
+      return isRender ? (
+        <List.Item key={item.name}>
+          <List.Content
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              fontWeight: '300',
+              fontSize: '.9rem'
+            }}
+          >
+            <div>{item.name}</div>
+            <div>
+              {item.system === 'unit'
+                ? itemValue
+                : fullCoverage
+                ? item.symbol === 'SAAP'
+                  ? days * itemValue
+                  : 'included'
+                : days * itemValue}
+            </div>
+          </List.Content>
+        </List.Item>
+      ) : null;
+    });
+  };
+
   return (
     <>
       <Segment>
@@ -15,6 +70,30 @@ export const QuoteDetails: React.FC<Props> = () => {
         >
           Quote Details
         </div>
+        <Divider />
+        {/* Pricing List */}
+        <Header as='h5' style={{ marginBottom: 5 }}>
+          Pricing{' '}
+        </Header>
+        <List style={{ marginTop: 5 }}>
+          {renderPricingList()}
+          <List.Item>
+            <List.Content
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                fontWeight: '300',
+                fontSize: '.9rem'
+              }}
+            >
+              <div>Days</div>
+              <div>{totalDays}</div>
+            </List.Content>
+          </List.Item>
+        </List>
+
+        {/* TOTAL */}
         <div
           style={{
             backgroundColor: 'violet',
@@ -25,20 +104,21 @@ export const QuoteDetails: React.FC<Props> = () => {
           }}
         >
           Total
-          <div>ISK 30000</div>
+          <div>ISK {totalDays + ExtrasTOTAL}</div>
         </div>
+        {/* kilometeres */}
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            minHeight: '60px'
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            minHeight: '60px',
+            fontWeight: 'bold',
+            fontSize: '1.2rem'
           }}
         >
-          <p style={{ margin: 0 }}>Damage Liability</p>
-          <p>ISK 250000</p>
+          Unlimited kilometres
         </div>
-        <div>Unlimited kilometres</div>
       </Segment>
     </>
   );

@@ -26,12 +26,18 @@ type LoginResponse {
   token: String
 }
 
+type BookingDateFormResponse {
+  error: String
+  days: Int
+}
+
 type Car {
   _id: ID
   name: String!
   producer: String!
   type: String!
   year: Int!
+  pricePerDay: Int!
   group: String!
   passengers: Int!
   baggages: Int!
@@ -86,11 +92,20 @@ input UserDataInput {
   smsCheck: Boolean
 }
 
+input BookingDateFormInput {
+  startDay: String
+  startHour: String
+  returnDay: String
+  returnHour: String
+  renterAge: String
+}
+
 type Query {
   me: User
   cars: [Car!]!
   car(input: GetCarInput): Car!
   relatedCars(id: ID, group: String!): [Car!]
+  checkBookingDateForm(input: BookingDateFormInput!): Int
 }
 
 type Mutation {
@@ -104,4 +119,5 @@ type Mutation {
     newPasswordConfirm: String!
     currentPassword: String!
   ): Boolean
+  checkBookingDateForm(input: BookingDateFormInput!): BookingDateFormResponse
 }

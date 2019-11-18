@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useContext } from 'react';
+import React, { useCallback, useState, useContext, useMemo } from 'react';
 import styled from 'styled-components';
 import { Car } from '../../graphql/types';
 import {
@@ -39,6 +39,7 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
   const {
     name,
     producer,
+    pricePerDay,
     group,
     passengers,
     baggages,
@@ -46,13 +47,18 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
     transmission
   } = car;
 
-  const { dispatch } = useContext(Store);
-
+  const { state, dispatch } = useContext(Store);
   const history = useHistory();
+  const days = state.bookingInfo.days;
+
+  const prices = useMemo(() => {
+    const price = days * pricePerDay;
+    return [price, 0.9 * price, 1.3 * price];
+  }, [days]);
 
   const [activeIndex, setActiveIndex] = useState(-1);
 
-  const handleClick = (e: any, titleProps: any) => {
+  const handleAccordionClick = (e: any, titleProps: any) => {
     const { index } = titleProps;
     const newIndex = activeIndex === index ? -1 : index;
     setActiveIndex(newIndex);
@@ -70,9 +76,21 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
     [baggages, doors, passengers, transmission]
   );
 
-  const handleBookNowClick = () => {
-    // 1) handle total amount
+  const handleBookNowClick = (id: number) => {
     dispatch({ type: 'BOOKING_STEP_2', payload: { name, transmission } });
+    dispatch({ type: 'SET_TOTAL_DAYS', payload: prices[id] });
+
+    // if is is '2' , it means we have fullCoverage package. We change fullCoverage value and then set 'value' for each fullCoverage options to '1'
+    if (id == 2) {
+      dispatch({ type: 'SET_FULL_COVERAGE', payload: true });
+      ['SCDW', 'WSP', 'TP'].forEach(el =>
+        dispatch({
+          type: 'SET_EXTRAS_ITEM_PRICE',
+          payload: { name: el, value: 1 }
+        })
+      );
+    }
+
     history.push('/booking/extras');
   };
 
@@ -115,7 +133,7 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
                 <Accordion.Title
                   active={activeIndex === 0}
                   index={0}
-                  onClick={handleClick}
+                  onClick={handleAccordionClick}
                   style={{
                     borderBottom: '1px solid violet',
                     paddingBottom: 0,
@@ -168,9 +186,13 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
             </div>
             <div style={{ marginTop: 15 }}>
               <p>
-                <span>ISK</span> 10000
+                <span>ISK</span> {prices[0]}
               </p>
-              <Button onClick={() => handleBookNowClick()} color='yellow'>
+              <Button
+                id={0}
+                onClick={(e: any) => handleBookNowClick(e.target.id)}
+                color='yellow'
+              >
                 Book Now
               </Button>
             </div>
@@ -189,9 +211,13 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
             </div>
             <div style={{ marginTop: 15 }}>
               <p>
-                <span>ISK</span> 8000
+                <span>ISK</span> {prices[1]}
               </p>
-              <Button onClick={() => handleBookNowClick()} color='yellow'>
+              <Button
+                id={1}
+                onClick={(e: any) => handleBookNowClick(e.target.id)}
+                color='yellow'
+              >
                 Book Now
               </Button>
             </div>
@@ -214,9 +240,13 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
 
             <div style={{ marginTop: 15 }}>
               <p>
-                <span>ISK</span> 15000
+                <span>ISK</span> {prices[2]}
               </p>
-              <Button onClick={() => handleBookNowClick()} color='yellow'>
+              <Button
+                id={2}
+                onClick={(e: any) => handleBookNowClick(e.target.id)}
+                color='yellow'
+              >
                 Book Now
               </Button>
             </div>
