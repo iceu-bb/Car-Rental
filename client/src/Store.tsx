@@ -14,8 +14,15 @@ interface IBookingInfo {
 }
 
 interface IBookingCar {
+  _id: string | null | undefined;
   name: string;
+  group: string;
   transmission: string;
+  upgraded: boolean;
+}
+
+interface Indexed {
+  [index: string]: any;
 }
 
 interface IExtrasItem {
@@ -30,7 +37,8 @@ type IAction =
   | { type: 'BOOKING_STEP_1'; payload: IBookingInfo }
   | { type: 'BOOKING_STEP_2'; payload: IBookingCar }
   | { type: 'SET_EXTRAS_ITEM_PRICE'; payload: IExtrasItem }
-  | { type: 'SET_FULL_COVERAGE'; payload: boolean };
+  | { type: 'SET_BOOKING_TYPE'; payload: string }
+  | { type: 'SET_UPGRADED_CAR'; payload: IBookingCar };
 
 const initialState = {
   currentUser: {
@@ -43,7 +51,7 @@ const initialState = {
   isAuth: false,
   step: 3,
   totalDays: 22200,
-  fullCoverage: false,
+  bookingType: '',
   totalExtras: {
     SCDW: 0,
     WSP: 0,
@@ -53,7 +61,7 @@ const initialState = {
     Infant: 0,
     Child: 0,
     Booster: 0
-  },
+  } as Indexed,
   bookingInfo: {
     startDay: '17-12-2019',
     returnDay: '27-12-2019',
@@ -62,7 +70,21 @@ const initialState = {
     renterAge: '25+',
     days: 5
   } as IBookingInfo,
-  bookingCar: {} as IBookingCar
+  bookingCar: {
+    _id: '5dc71aeb1c9d44000034669d',
+    group: 'B',
+    transmission: 'Automatic',
+    name: 'Polo',
+    upgraded: false
+  } as IBookingCar,
+  extrasToGroupRate: {
+    A: 1,
+    B: 1.1,
+    C: 1.2,
+    D: 1.4,
+    E: 1.75,
+    F: 2.1
+  } as Indexed
 };
 
 const defaultDispatch: React.Dispatch<IAction> = () => initialState;
@@ -110,10 +132,37 @@ export default function reducer(state: IState, action: IAction): IState {
           [name]: value
         }
       };
-    case 'SET_FULL_COVERAGE':
+    case 'SET_BOOKING_TYPE':
       return {
         ...state,
-        fullCoverage: action.payload
+        bookingType: action.payload
+      };
+    case 'SET_UPGRADED_CAR':
+      // multiply extras coverages prices by new rate
+      // iterator because we consider only (0 -4) object properties, the rest is without change because its unit price
+      let iterator = 0;
+      const tempObj = {} as Indexed;
+      for (let extras in state.totalExtras) {
+        if (iterator < 4) {
+          // we need to take correction becasue when we choose full Cover we make same packages value = 1, we need them to still be 1
+          if (state.totalExtras[extras] === 1) {
+            tempObj[extras] = 1;
+          } else {
+            tempObj[extras] = Math.round(
+              (state.totalExtras[extras] *
+                state.extrasToGroupRate[action.payload.group]) /
+                state.extrasToGroupRate[state.bookingCar.group]
+            );
+          }
+        } else tempObj[extras] = state.totalExtras[extras];
+
+        iterator++;
+      }
+
+      return {
+        ...state,
+        totalExtras: { ...tempObj },
+        bookingCar: action.payload
       };
     default:
       return state;

@@ -80,7 +80,7 @@ export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
                   totalDays={state.totalDays}
                   totalExtras={state.totalExtras}
                   days={state.bookingInfo.days}
-                  fullCoverage={state.fullCoverage}
+                  fullCoverage={state.bookingType === 'fullCover'}
                 />
               </>
             )}

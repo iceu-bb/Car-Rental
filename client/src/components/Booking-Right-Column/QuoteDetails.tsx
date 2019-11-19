@@ -20,6 +20,9 @@ export const QuoteDetails: React.FC<Props> = ({
     (prev, pair: any, currentIndex) => {
       const [key, value] = pair;
 
+      // this check is for FullCover when we set packacges values to 1, we want to skip them(they will be markes as 'included')
+      if (value === 1) return prev;
+
       //check system ('day' or 'unit')
       return extrasItems[currentIndex].system === 'day'
         ? prev + days * value

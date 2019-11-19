@@ -14,8 +14,15 @@ interface Props {
 }
 
 export const ExtrasItem: React.FC<Props> = ({ item }) => {
-  const { dispatch } = useContext(Store);
+  const { state, dispatch } = useContext(Store);
   const [isActive, setActive] = useState(false);
+
+  // adjust price to group, only coverages
+  const groupRelatedItemPrice = Math.round(
+    item.system === 'day'
+      ? item.price * state.extrasToGroupRate[state.bookingCar.group]
+      : item.price
+  );
 
   const handleClick = () => {
     isActive
@@ -25,7 +32,7 @@ export const ExtrasItem: React.FC<Props> = ({ item }) => {
         })
       : dispatch({
           type: 'SET_EXTRAS_ITEM_PRICE',
-          payload: { name: item.symbol, value: item.price }
+          payload: { name: item.symbol, value: groupRelatedItemPrice }
         });
 
     setActive(state => !state);
@@ -70,16 +77,7 @@ export const ExtrasItem: React.FC<Props> = ({ item }) => {
                 lineHeight: '1.1rem'
               }}
             >
-              {item.name === 'GPS Navigation System' ? (
-                <>
-                  <p style={{ marginBottom: -2 }}>
-                    Don't get lost in Iceland, hire a GPS system.
-                  </p>
-                  <p>(Max charge 7 days)</p>
-                </>
-              ) : (
-                item.description
-              )}
+              {item.description}
             </Item.Description>
           </Item>
         </Grid.Column>
@@ -96,7 +94,7 @@ export const ExtrasItem: React.FC<Props> = ({ item }) => {
           <Item style={{ marginRight: 30 }}>
             <Item.Header style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>
               <span style={{ fontSize: '1rem', fontWeight: 300 }}>ISK</span>{' '}
-              {item.price}
+              {groupRelatedItemPrice}
             </Item.Header>
             <Item.Description
               style={{

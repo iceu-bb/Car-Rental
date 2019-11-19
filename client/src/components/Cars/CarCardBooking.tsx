@@ -37,6 +37,7 @@ interface CarCardProps {
 
 export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
   const {
+    _id,
     name,
     producer,
     pricePerDay,
@@ -52,8 +53,15 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
   const days = state.bookingInfo.days;
 
   const prices = useMemo(() => {
-    const price = days * pricePerDay;
-    return [price, 0.9 * price, 1.3 * price];
+    let price = days * pricePerDay;
+    if (state.bookingInfo.renterAge !== '25+') {
+      price *= 1.15;
+    }
+    return [
+      Math.round(price),
+      Math.round(0.9 * price),
+      Math.round(1.25 * price)
+    ];
   }, [days]);
 
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -77,12 +85,18 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
   );
 
   const handleBookNowClick = (id: number) => {
-    dispatch({ type: 'BOOKING_STEP_2', payload: { name, transmission } });
+    // set next step
+    dispatch({
+      type: 'BOOKING_STEP_2',
+      payload: { _id, name, group, transmission, upgraded: false }
+    });
+    //setDays
     dispatch({ type: 'SET_TOTAL_DAYS', payload: prices[id] });
-
-    // if is is '2' , it means we have fullCoverage package. We change fullCoverage value and then set 'value' for each fullCoverage options to '1'
+    // set booking type
+    const bookingTypes = ['location', 'prepaid', 'fullCover'];
+    dispatch({ type: 'SET_BOOKING_TYPE', payload: bookingTypes[id] });
+    // if is is '2' , it means we have fullCover package. We need to set 'value' for each fullCover options to '1'
     if (id == 2) {
-      dispatch({ type: 'SET_FULL_COVERAGE', payload: true });
       ['SCDW', 'WSP', 'TP'].forEach(el =>
         dispatch({
           type: 'SET_EXTRAS_ITEM_PRICE',
@@ -233,7 +247,7 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
             <div>
               <p>Coverage Package</p>
               <p>
-                Save 40% on our extra protection by opting to our coverage
+                Save money on our extra protection by opting to our coverage
                 package. This package includes CDW, SCDW, TP and WSP protection:
               </p>
             </div>

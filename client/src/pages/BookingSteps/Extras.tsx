@@ -12,14 +12,15 @@ export const Extras: React.FC<Props> = () => {
 
   // think memo
   const renderExtrasItems = useCallback(() => {
-    const extrasListToRender = state.fullCoverage
-      ? extrasItems.slice(3, extrasItems.length)
-      : extrasItems;
+    const extrasListToRender =
+      state.bookingType === 'fullCover'
+        ? extrasItems.slice(3, extrasItems.length)
+        : extrasItems;
 
     return extrasListToRender.map(item => (
       <ExtrasItem key={item.symbol} item={item} />
     ));
-  }, [state.fullCoverage]);
+  }, [state.bookingType]);
 
   return (
     <>

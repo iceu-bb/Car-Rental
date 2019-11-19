@@ -66,11 +66,10 @@ export const extrasItems = [
   {
     name: 'GPS Navigation System',
     path: '',
-    price: 4800,
+    price: 2500,
     symbol: 'GPS',
     system: 'unit',
-    description:
-      "Don't get lost in Iceland, hire a GPS system. (Max charge 7 days)"
+    description: "Don't get lost in Iceland, hire a GPS system"
   },
   {
     name: 'Infant Seat',

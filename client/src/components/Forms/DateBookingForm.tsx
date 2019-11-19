@@ -80,6 +80,7 @@ export const DateBookingForm = () => {
         size='small'
         open={modalError.length > 1}
         onClose={() => setModalError('')}
+        centered={false}
       >
         <Modal.Header>Error</Modal.Header>
         <Modal.Content>{modalError}</Modal.Content>
