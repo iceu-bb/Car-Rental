@@ -1,14 +1,12 @@
 import React, { useContext, useCallback } from 'react';
 import { Segment, Header, Grid, Button } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { extrasItems } from '../../helpers/constants';
 import { ExtrasItem } from '../../components/Booking-Left-Column/ExtrasItem';
 import { Store } from '../../Store';
 
-interface Props {}
-
-export const Extras: React.FC<Props> = () => {
-  const { state } = useContext(Store);
+export const Extras: React.FC<RouteComponentProps> = ({ history }) => {
+  const { state, dispatch } = useContext(Store);
 
   // think memo
   const renderExtrasItems = useCallback(() => {
@@ -22,6 +20,18 @@ export const Extras: React.FC<Props> = () => {
     ));
   }, [state.bookingType]);
 
+  // useCallback
+  const handleClickBack = () => {
+    dispatch({ type: 'SET_BOOKING_STEP', payload: 2 });
+    history.push('/booking/selection');
+  };
+
+  // useCallback
+  const handleClickForward = () => {
+    dispatch({ type: 'SET_BOOKING_STEP', payload: 4 });
+    history.replace('/booking/details');
+  };
+
   return (
     <>
       <Segment style={{ marginBottom: '.05rem' }}>
@@ -32,10 +42,10 @@ export const Extras: React.FC<Props> = () => {
         <Grid>{renderExtrasItems()}</Grid>
       </Segment>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button as={Link} to='/booking/selection' size='big'>
+        <Button onClick={() => handleClickBack()} size='big'>
           Back
         </Button>
-        <Button as={Link} to='/booking/details' size='big' color='yellow'>
+        <Button onClick={() => handleClickForward()} size='big' color='yellow'>
           Next
         </Button>
       </div>

@@ -17,7 +17,7 @@ import { Discount } from '../components/Booking-Right-Column/Discount';
 
 // TODO: similar component to Our Fleet Page
 export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
-  const { step } = match.params;
+  const { stepName } = match.params;
   const { state } = useContext(Store);
 
   if (!state.bookingInfo.startDay) {
@@ -36,19 +36,19 @@ export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
           <Menu.Item
             name='selection'
             content='Vehicle Selection'
-            active={step === 'selection'}
+            active={stepName === 'selection'}
             style={{ margin: 10, padding: '0 30px 10px 0' }}
           />
           <Menu.Item
             name='extras'
             content='Accessories & Extras'
-            active={step === 'extras'}
+            active={stepName === 'extras'}
             style={{ margin: 10, padding: '0 30px 10px 0' }}
           />
           <Menu.Item
             name='details'
             content='Renter Details'
-            active={step === 'details'}
+            active={stepName === 'details'}
             style={{ margin: 10, padding: '0 30px 10px 0' }}
           />
           <Menu.Item
@@ -73,9 +73,10 @@ export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
           <Grid.Column width={5}>
             <Currency />
             <PickupReturn bookingInfo={state.bookingInfo} />
-            {state.step > 1 && (
+            {state.step > 2 && (
               <>
                 <VehicleDetails />
+                {state.step > 3 && <Discount />}
                 <QuoteDetails
                   totalDays={state.totalDays}
                   totalExtras={state.totalExtras}
@@ -84,7 +85,6 @@ export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
                 />
               </>
             )}
-            {state.step > 2 && <Discount />}
           </Grid.Column>
         </Grid>
       </Container>

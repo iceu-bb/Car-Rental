@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Segment, Select, Button } from 'semantic-ui-react';
 import { CarsListBooking } from '../../components/Cars/CarsListBooking';
 
 import { carTypes } from '../../helpers/constants';
 import { useCarsQuery } from '../../graphql/types';
+import { Store } from '../../Store';
 
 interface Props {}
 
@@ -13,8 +14,16 @@ const sortOptions = [
 ];
 
 export const VehiclesSelection: React.FC<Props> = () => {
+  const { dispatch } = useContext(Store);
   const { data } = useCarsQuery();
   const [filter, setFilter] = useState<string>('All');
+
+  useEffect(() => {
+    // clear extras items price in case someone go back from further steps of booking
+    dispatch({ type: 'CLEAR_EXTRAS' });
+    // clear step
+    dispatch({ type: 'SET_BOOKING_STEP', payload: 2 });
+  }, []);
 
   const renderButtons = useCallback(
     () =>

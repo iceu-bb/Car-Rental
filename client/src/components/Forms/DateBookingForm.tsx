@@ -69,10 +69,12 @@ export const DateBookingForm = () => {
     }
 
     if (days) {
-      dispatch({ type: 'BOOKING_STEP_1', payload: { ...date, days } });
+      dispatch({ type: 'BOOKING_STEP_2', payload: { ...date, days } });
       history.push('/booking/selection');
     }
   };
+
+  console.log(date);
 
   return (
     <Segment>
@@ -138,9 +140,9 @@ export const DateBookingForm = () => {
             name='returnDay'
             closable
             minDate={
-              date.startDay !== ''
-                ? date.startDay
-                : moment(new Date()).add(1, 'days')
+              date.startDay === ''
+                ? moment(new Date()).add(1, 'days')
+                : date.startDay
             }
             maxDate={moment(new Date()).add(1, 'year')}
             animation='fade'

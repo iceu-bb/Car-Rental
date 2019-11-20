@@ -39,7 +39,7 @@ export const Router: React.FC = () => {
           <Route exact path='/vehicles' component={OurFleetPage} />
           <Route exact path='/vehicles/:slug' component={CarDetail} />
           <ProtectedRoute exact path='/my-account' component={UserPanel} />
-          <Route path='/booking/:step' component={BookingPage} />
+          <Route path='/booking/:stepName' component={BookingPage} />
           <Route
             exact
             path='/booking-confirmation/:bookingNumber'

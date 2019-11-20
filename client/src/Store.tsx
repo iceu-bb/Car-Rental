@@ -21,6 +21,13 @@ interface IBookingCar {
   upgraded: boolean;
 }
 
+interface IRenterInformation {
+  firstName: string;
+  lastName: string;
+  email: string;
+  telephoneNumber: number;
+}
+
 interface Indexed {
   [index: string]: any;
 }
@@ -41,11 +48,13 @@ type IAction =
   | { type: 'SET_TOTAL_DAYS'; payload: number }
   | { type: 'SET_BOOKING_STEP'; payload: number }
   | { type: 'SET_BOOKING_NUMBER'; payload: number }
-  | { type: 'BOOKING_STEP_1'; payload: IBookingInfo }
-  | { type: 'BOOKING_STEP_2'; payload: IBookingCar }
+  | { type: 'BOOKING_STEP_2'; payload: IBookingInfo }
+  | { type: 'BOOKING_STEP_3'; payload: IBookingCar }
   | { type: 'SET_EXTRAS_ITEM_PRICE'; payload: IExtrasItem }
+  | { type: 'CLEAR_EXTRAS' }
   | { type: 'SET_BOOKING_TYPE'; payload: BookingType }
-  | { type: 'SET_UPGRADED_CAR'; payload: IBookingCar };
+  | { type: 'SET_UPGRADED_CAR'; payload: IBookingCar }
+  | { type: 'SET_RENTER_INFORMATION'; payload: IRenterInformation };
 
 const initialState = {
   currentUser: {
@@ -58,7 +67,7 @@ const initialState = {
   isAuth: false,
   step: 3,
   bookingType: '',
-  bookingNumber: 0,
+  bookingNumber: 111,
   totalDays: 22200,
   totalExtras: {
     SCDW: 0,
@@ -85,6 +94,12 @@ const initialState = {
     name: 'Polo',
     upgraded: false
   } as IBookingCar,
+  renterInformation: {
+    firstName: 'Tadek',
+    lastName: 'Norek',
+    email: 'alasld',
+    telephoneNumber: 11122
+  },
   extrasToGroupRate: {
     A: 1,
     B: 1.1,
@@ -124,16 +139,16 @@ export default function reducer(state: IState, action: IAction): IState {
         ...state,
         step: action.payload
       };
-    case 'BOOKING_STEP_1':
-      return {
-        ...state,
-        step: 1,
-        bookingInfo: action.payload
-      };
     case 'BOOKING_STEP_2':
       return {
         ...state,
         step: 2,
+        bookingInfo: action.payload
+      };
+    case 'BOOKING_STEP_3':
+      return {
+        ...state,
+        step: 3,
         bookingCar: action.payload
       };
     case 'SET_EXTRAS_ITEM_PRICE':
@@ -143,6 +158,20 @@ export default function reducer(state: IState, action: IAction): IState {
         totalExtras: {
           ...state.totalExtras,
           [name]: value
+        }
+      };
+    case 'CLEAR_EXTRAS':
+      return {
+        ...state,
+        totalExtras: {
+          SCDW: 0,
+          WSP: 0,
+          TP: 0,
+          SAAP: 0,
+          GPS: 0,
+          Infant: 0,
+          Child: 0,
+          Booster: 0
         }
       };
     case 'SET_BOOKING_TYPE':
@@ -181,6 +210,11 @@ export default function reducer(state: IState, action: IAction): IState {
         ...state,
         totalExtras: { ...tempObj },
         bookingCar: action.payload
+      };
+    case 'SET_RENTER_INFORMATION':
+      return {
+        ...state,
+        renterInformation: action.payload
       };
     default:
       return state;

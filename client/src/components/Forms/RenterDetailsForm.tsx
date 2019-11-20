@@ -109,6 +109,15 @@ export const RenterDetailsForm: React.FC<Props> = ({ userData }) => {
       extrasArray.push({ name: key, value });
     });
 
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.telephoneNumber
+    ) {
+      return history.push('/');
+    }
+
     const { firstName, lastName, email, telephoneNumber } = formData;
 
     const { data } = await createBooking({
@@ -135,11 +144,15 @@ export const RenterDetailsForm: React.FC<Props> = ({ userData }) => {
 
     const bookingNumber = data.createBooking.bookingNumber;
 
+    dispatch({
+      type: 'SET_RENTER_INFORMATION',
+      payload: { firstName, lastName, email, telephoneNumber }
+    });
     dispatch({ type: 'SET_BOOKING_NUMBER', payload: bookingNumber });
     dispatch({ type: 'SET_BOOKING_STEP', payload: 5 });
     reset();
 
-    history.push(`/booking-confirmation/${bookingNumber}`);
+    history.replace(`/booking-confirmation/${bookingNumber}`);
   };
 
   return (

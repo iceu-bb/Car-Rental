@@ -89,7 +89,7 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
   const handleBookNowClick = (id: number) => {
     // set next step
     dispatch({
-      type: 'BOOKING_STEP_2',
+      type: 'BOOKING_STEP_3',
       payload: { _id, name, group, transmission, upgraded: false }
     });
     //setDays
