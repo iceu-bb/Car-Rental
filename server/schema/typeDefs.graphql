@@ -22,15 +22,6 @@ type User {
   smsCheck: Boolean
 }
 
-type LoginResponse {
-  token: String
-}
-
-type BookingDateFormResponse {
-  error: String
-  days: Int
-}
-
 type Car {
   _id: ID
   name: String!
@@ -55,6 +46,33 @@ type Car {
   electricCar: Boolean
 }
 
+type Booking {
+  bookingNumber: Int!
+  car: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  renterAge: String!
+  telephoneNumber: Int!
+  days: Int!
+  startDate: String!
+  returnDate: String!
+  startTime: String!
+  returnTime: String!
+  totalDays: Int!
+  airlineCode: String
+  flightNumber: String
+}
+
+type LoginResponse {
+  token: String
+}
+
+type BookingDateFormResponse {
+  error: String
+  days: Int
+}
+
 input AddCarInput {
   name: String!
   model: String!
@@ -71,6 +89,11 @@ input RegisterInput {
 input GetCarInput {
   name: String!
   transmission: String!
+}
+
+input ExtrasItem {
+  name: String
+  value: Int
 }
 
 input UserDataInput {
@@ -98,6 +121,20 @@ input BookingDateFormInput {
   returnDay: String
   returnHour: String
   renterAge: String
+  days: Int
+}
+
+input CreateBookingInput {
+  car: ID
+  firstName: String
+  lastName: String
+  email: String
+  telephoneNumber: Int
+  bookingDate: BookingDateFormInput
+  airlineCode: String
+  flightNumber: String
+  totalDays: Int
+  extras: [ExtrasItem]
 }
 
 type Query {
@@ -120,4 +157,5 @@ type Mutation {
     currentPassword: String!
   ): Boolean
   checkBookingDateForm(input: BookingDateFormInput!): BookingDateFormResponse
+  createBooking(input: CreateBookingInput!): Booking
 }

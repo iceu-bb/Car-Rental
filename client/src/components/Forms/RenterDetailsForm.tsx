@@ -1,7 +1,10 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useContext } from 'react';
 import useForm from 'react-hook-form';
 import * as yup from 'yup';
 import { Form, Segment, Divider, Button } from 'semantic-ui-react';
+import { useCreateBookingMutation } from '../../graphql/types';
+import { Store } from '../../Store';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   userData?: {
@@ -22,6 +25,11 @@ interface IRenterInformation {
   newsletterCheck: boolean | null | undefined;
 }
 
+interface IExtrasObject {
+  name: string;
+  value: number;
+}
+
 const RenterDetailSchema = yup.object().shape({
   firstName: yup
     .string()
@@ -40,8 +48,12 @@ const RenterDetailSchema = yup.object().shape({
 });
 
 export const RenterDetailsForm: React.FC<Props> = ({ userData }) => {
-  let firstName, lastName, email, telephoneNumber;
+  const { state, dispatch } = useContext(Store);
+  const history = useHistory();
+  const [createBooking] = useCreateBookingMutation();
 
+  let firstName, lastName, email, telephoneNumber;
+  // for populating Form with user Data if user is Logged In
   if (userData) {
     firstName = userData.firstName;
     lastName = userData.lastName;
@@ -90,8 +102,44 @@ export const RenterDetailsForm: React.FC<Props> = ({ userData }) => {
     [setValue]
   );
 
-  const onSubmit = (formData: IRenterInformation) => {
-    console.log(formData);
+  const onSubmit = async (formData: IRenterInformation) => {
+    // create array of extras
+    const extrasArray = [] as IExtrasObject[];
+    Object.entries(state.totalExtras).map(([key, value]) => {
+      extrasArray.push({ name: key, value });
+    });
+
+    const { firstName, lastName, email, telephoneNumber } = formData;
+
+    const { data } = await createBooking({
+      variables: {
+        car: state.bookingCar._id,
+        firstName,
+        lastName,
+        email,
+        telephoneNumber,
+        bookingDate: {
+          ...state.bookingInfo
+        },
+        totalDays: state.totalDays,
+        extras: extrasArray
+      }
+    });
+
+    if (!data || !data.createBooking) {
+      dispatch({ type: 'SET_BOOKING_STEP', payload: 0 });
+      reset();
+      alert('We are sorry. Please try agian');
+      return history.push('/');
+    }
+
+    const bookingNumber = data.createBooking.bookingNumber;
+
+    dispatch({ type: 'SET_BOOKING_NUMBER', payload: bookingNumber });
+    dispatch({ type: 'SET_BOOKING_STEP', payload: 5 });
+    reset();
+
+    history.push(`/booking-confirmation/${bookingNumber}`);
   };
 
   return (

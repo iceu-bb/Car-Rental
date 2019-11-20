@@ -19,7 +19,8 @@
     "graphql-tools": "^4.0.6",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
-    "mongoose": "^5.7.8"
+    "mongoose": "^5.7.8",
+    "mongoose-sequence": "^5.2.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

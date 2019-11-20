@@ -24,6 +24,11 @@ interface IBookingCar {
 interface Indexed {
   [index: string]: any;
 }
+interface IndexedNumber {
+  [index: string]: number;
+}
+// repeated in few components
+type BookingType = 'location' | 'prepaid' | 'fullCover';
 
 interface IExtrasItem {
   name: string;
@@ -34,10 +39,12 @@ type IAction =
   | { type: 'LOGIN_USER'; payload: User }
   | { type: 'IS_AUTH'; payload: boolean }
   | { type: 'SET_TOTAL_DAYS'; payload: number }
+  | { type: 'SET_BOOKING_STEP'; payload: number }
+  | { type: 'SET_BOOKING_NUMBER'; payload: number }
   | { type: 'BOOKING_STEP_1'; payload: IBookingInfo }
   | { type: 'BOOKING_STEP_2'; payload: IBookingCar }
   | { type: 'SET_EXTRAS_ITEM_PRICE'; payload: IExtrasItem }
-  | { type: 'SET_BOOKING_TYPE'; payload: string }
+  | { type: 'SET_BOOKING_TYPE'; payload: BookingType }
   | { type: 'SET_UPGRADED_CAR'; payload: IBookingCar };
 
 const initialState = {
@@ -50,8 +57,9 @@ const initialState = {
   } as User,
   isAuth: false,
   step: 3,
-  totalDays: 22200,
   bookingType: '',
+  bookingNumber: 0,
+  totalDays: 22200,
   totalExtras: {
     SCDW: 0,
     WSP: 0,
@@ -61,7 +69,7 @@ const initialState = {
     Infant: 0,
     Child: 0,
     Booster: 0
-  } as Indexed,
+  } as IndexedNumber,
   bookingInfo: {
     startDay: '17-12-2019',
     returnDay: '27-12-2019',
@@ -84,7 +92,7 @@ const initialState = {
     D: 1.4,
     E: 1.75,
     F: 2.1
-  } as Indexed
+  } as IndexedNumber
 };
 
 const defaultDispatch: React.Dispatch<IAction> = () => initialState;
@@ -111,6 +119,11 @@ export default function reducer(state: IState, action: IAction): IState {
         ...state,
         totalDays: action.payload
       };
+    case 'SET_BOOKING_STEP':
+      return {
+        ...state,
+        step: action.payload
+      };
     case 'BOOKING_STEP_1':
       return {
         ...state,
@@ -136,6 +149,11 @@ export default function reducer(state: IState, action: IAction): IState {
       return {
         ...state,
         bookingType: action.payload
+      };
+    case 'SET_BOOKING_NUMBER':
+      return {
+        ...state,
+        bookingNumber: action.payload
       };
     case 'SET_UPGRADED_CAR':
       // multiply extras coverages prices by new rate

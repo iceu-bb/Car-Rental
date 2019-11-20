@@ -31,6 +31,8 @@ const StyledList = styled(List)`
   }
 `;
 
+type BookingType = 'location' | 'prepaid' | 'fullCover';
+
 interface CarCardProps {
   car: Car;
 }
@@ -94,7 +96,10 @@ export const CarCardBooking = React.memo<CarCardProps>(({ car }) => {
     dispatch({ type: 'SET_TOTAL_DAYS', payload: prices[id] });
     // set booking type
     const bookingTypes = ['location', 'prepaid', 'fullCover'];
-    dispatch({ type: 'SET_BOOKING_TYPE', payload: bookingTypes[id] });
+    dispatch({
+      type: 'SET_BOOKING_TYPE',
+      payload: bookingTypes[id] as BookingType
+    });
     // if is is '2' , it means we have fullCover package. We need to set 'value' for each fullCover options to '1'
     if (id == 2) {
       ['SCDW', 'WSP', 'TP'].forEach(el =>

@@ -1,5 +1,6 @@
 import Car from '../models/car';
 import User from '../models/user';
+import Booking from '../models/booking';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { secret } from '../env';
@@ -297,6 +298,53 @@ const resolvers: any = {
       }
 
       return { days };
+    },
+    createBooking: async (root: any, { input }: any): Promise<any> => {
+      const {
+        car,
+        firstName,
+        lastName,
+        email,
+        telephoneNumber,
+        bookingDate: {
+          startDay,
+          startHour,
+          returnDay,
+          returnHour,
+          renterAge,
+          days,
+          airlineCode,
+          flightNumber
+        },
+        totalDays,
+        extras
+      } = input;
+
+      let newBooking;
+
+      try {
+        newBooking = await new Booking({
+          car,
+          firstName,
+          lastName,
+          email,
+          telephoneNumber,
+          startDay,
+          startHour,
+          returnDay,
+          returnHour,
+          renterAge,
+          days,
+          totalDays,
+          airlineCode,
+          flightNumber,
+          extras
+        }).save();
+      } catch (error) {
+        console.log(error);
+      }
+
+      return newBooking;
     }
   }
 };
