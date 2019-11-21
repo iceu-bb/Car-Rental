@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useUserBookingsQuery } from '../../graphql/types';
 import {
   Container,
   Segment,
@@ -8,24 +9,43 @@ import {
   List,
   Table
 } from 'semantic-ui-react';
+import { Store } from '../../Store';
+import { BookingsSegment } from '../../components/BookingsSegment';
 
 interface Props {}
 
 export const AccountOverview: React.FC<Props> = () => {
+  const { state, dispatch } = useContext(Store);
+
+  const { data, loading, error } = useUserBookingsQuery({
+    variables: { email: state.currentUser.email }
+  });
+
+  if (!data || !data.userBookings || error || loading) {
+    return null;
+  }
+
+  const {
+    upcomingBookings,
+    currentBookings,
+    pastBookings,
+    cancelledBookings,
+    accountStatus,
+    rentals,
+    rentalsToNextUpgrade,
+    moneySpend,
+    moneySpendToNextUpgrade
+  } = data.userBookings;
+
   return (
     <Container>
-      <Segment>
-        <Header as='h3'>Upcoming Bookings</Header>
-        <Item>No upcoming bookings</Item>
-      </Segment>
-      <Segment>
-        <Header as='h3'>Past Rentals</Header>
-        <Item>No rentals available</Item>
-      </Segment>
-      <Segment>
-        <Header as='h3'>Cancelled bookings</Header>
-        <Item>No canceled bookings</Item>
-      </Segment>
+      <BookingsSegment bookings={upcomingBookings} header='Upcoming Bookings' />
+      <BookingsSegment bookings={currentBookings} header='Current Rentals' />
+      <BookingsSegment bookings={pastBookings} header='Past Rentals' />
+      <BookingsSegment
+        bookings={cancelledBookings}
+        header='Cancelled bookings'
+      />
 
       <Segment>
         <Grid columns={2} stackable>
@@ -40,11 +60,6 @@ export const AccountOverview: React.FC<Props> = () => {
                   <List.Item>€15 money off voucher*</List.Item>
                   <List.Item>Vehicle upgrade voucher***</List.Item>
                   <List.Item>Voucher for a free weekend rental**</List.Item>
-                  <List.Item>
-                    Reach Avis Preferred Plus status even faster: the ‘loyalty
-                    value’ of your rental will go up by €100 if you hire a
-                    vehicle within 60 days of registration
-                  </List.Item>
                 </List>
               </List.Item>
               <List.Item>
@@ -72,22 +87,32 @@ export const AccountOverview: React.FC<Props> = () => {
                   fontWeight: 'bold'
                 }}
               >
-                Standard Account
+                {accountStatus}
               </Item.Content>
             </Item>
 
             <Table stackable>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Rentals: 0</Table.HeaderCell>
-                  <Table.HeaderCell>Spend: $0</Table.HeaderCell>
+                  <Table.HeaderCell>Rentals: {rentals}</Table.HeaderCell>
+                  <Table.HeaderCell>Spend: ISK {moneySpend}</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
 
               <Table.Body>
                 <Table.Row>
-                  <Table.Cell>Rentals to next upgrade: 5</Table.Cell>
-                  <Table.Cell>Spend to next upgrade: $1000.00</Table.Cell>
+                  <Table.Cell>
+                    Rentals to next upgrade:{' '}
+                    {rentalsToNextUpgrade === -10
+                      ? 'Premium Gold Account'
+                      : rentalsToNextUpgrade}
+                  </Table.Cell>
+                  <Table.Cell>
+                    Spend to next upgrade: ISK{' '}
+                    {moneySpendToNextUpgrade === -10
+                      ? 'Premium Gold Account'
+                      : moneySpendToNextUpgrade}
+                  </Table.Cell>
                 </Table.Row>
               </Table.Body>
             </Table>

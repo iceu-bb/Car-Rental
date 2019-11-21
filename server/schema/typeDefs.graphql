@@ -52,13 +52,14 @@ type Booking {
   firstName: String!
   lastName: String!
   email: String!
+  status: String!
   renterAge: String!
   telephoneNumber: Int!
   days: Int!
-  startDate: String!
-  returnDate: String!
-  startTime: String!
-  returnTime: String!
+  startDay: String!
+  returnDay: String!
+  startHour: String!
+  returnHour: String!
   totalDays: Int!
   airlineCode: String
   flightNumber: String
@@ -71,6 +72,18 @@ type LoginResponse {
 type BookingDateFormResponse {
   error: String
   days: Int
+}
+
+type UserBookingsResponse {
+  upcomingBookings: [Booking]
+  currentBookings: [Booking]
+  pastBookings: [Booking]
+  cancelledBookings: [Booking]
+  accountStatus: String
+  rentals: Int
+  rentalsToNextUpgrade: Int
+  moneySpend: Float
+  moneySpendToNextUpgrade: Float
 }
 
 input AddCarInput {
@@ -142,7 +155,7 @@ type Query {
   cars: [Car!]!
   car(input: GetCarInput): Car!
   relatedCars(id: ID, group: String!): [Car!]
-  checkBookingDateForm(input: BookingDateFormInput!): Int
+  userBookings(email: String!): UserBookingsResponse
 }
 
 type Mutation {

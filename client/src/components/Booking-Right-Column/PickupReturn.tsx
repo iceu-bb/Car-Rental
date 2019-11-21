@@ -85,7 +85,7 @@ export const PickupReturn: React.FC<Props> = ({ bookingInfo }) => {
                 fontWeight: '300'
               }}
             >
-              Renter Age
+              Days
             </Item.Header>
             <Item.Description
               style={{
@@ -94,7 +94,7 @@ export const PickupReturn: React.FC<Props> = ({ bookingInfo }) => {
                 marginBottom: 10
               }}
             >
-              {bookingInfo.renterAge}
+              {bookingInfo.days}
             </Item.Description>
           </Item>
         </Grid.Row>

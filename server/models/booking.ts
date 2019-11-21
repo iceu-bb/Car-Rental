@@ -8,6 +8,7 @@ export interface IBooking extends Document {
   firstName: string;
   lastName: string;
   email: string;
+  status: 'active' | 'cancelled';
   renterAge: string;
   telephoneNumber: number;
   days: number;
@@ -16,6 +17,7 @@ export interface IBooking extends Document {
   startHour: string;
   returnHour: string;
   totalDays: number;
+  total: number;
   airlineCode: string;
   flightNumber: string;
   extras: [{ name: string; value: number }];
@@ -34,6 +36,12 @@ const BookingSchema: Schema = new Schema<IBooking>(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true },
+    status: {
+      type: String,
+      required: true,
+      default: 'active',
+      enum: ['active', 'cancelled']
+    },
     renterAge: { type: String, required: true },
     telephoneNumber: { type: Number, required: true },
     days: { type: Number, required: true },
@@ -42,6 +50,7 @@ const BookingSchema: Schema = new Schema<IBooking>(
     startHour: { type: String, required: true },
     returnHour: { type: String, required: true },
     totalDays: { type: Number, required: true },
+    total: { type: Number },
     extras: [
       {
         name: { type: String, required: true },
@@ -60,6 +69,16 @@ const BookingSchema: Schema = new Schema<IBooking>(
 BookingSchema.plugin(AutoIncrement, {
   inc_field: 'bookingNumber',
   start_seq: 373829
+});
+
+// calculate total value of booking
+BookingSchema.pre<IBooking>('save', function(next) {
+  const totalExtras = this.extras.reduce((acc, curr) => {
+    if (curr.value === 0 || curr.value === 1) return acc;
+    return acc + curr.value;
+  }, 0);
+  this.total = this.totalDays + totalExtras;
+  next();
 });
 
 export default mongoose.model<IBooking>('Booking', BookingSchema);

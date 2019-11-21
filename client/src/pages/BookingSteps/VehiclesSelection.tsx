@@ -8,6 +8,9 @@ import { Store } from '../../Store';
 
 interface Props {}
 
+// TODO filter types
+type PriceSortTypes = 'lowest' | 'highest';
+
 const sortOptions = [
   { key: 'lowest', value: 'lowest', text: 'Lowest Price' },
   { key: 'highest', value: 'highest', text: 'Highest Price' }
@@ -17,6 +20,7 @@ export const VehiclesSelection: React.FC<Props> = () => {
   const { dispatch } = useContext(Store);
   const { data } = useCarsQuery();
   const [filter, setFilter] = useState<string>('All');
+  const [priceSort, setPriceSort] = useState<PriceSortTypes>('lowest');
 
   useEffect(() => {
     // clear extras items price in case someone go back from further steps of booking
@@ -35,6 +39,10 @@ export const VehiclesSelection: React.FC<Props> = () => {
     []
   );
 
+  const handleSortChange = useCallback((e, { value }) => {
+    setPriceSort(value);
+  }, []);
+
   if (data === undefined || data.cars === undefined) {
     return null;
   }
@@ -46,10 +54,11 @@ export const VehiclesSelection: React.FC<Props> = () => {
         <Select
           defaultValue={sortOptions[0].key}
           options={sortOptions}
+          onChange={handleSortChange}
           style={{ minWidth: '10px' }}
         />
       </Segment>
-      <CarsListBooking cars={data.cars} filter={filter} />
+      <CarsListBooking cars={data.cars} filter={filter} priceSort={priceSort} />
     </>
   );
 };

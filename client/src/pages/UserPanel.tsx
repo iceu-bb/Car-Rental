@@ -60,7 +60,7 @@ export const UserPanel: React.FC = () => {
                 className: 'wrapped'
               }}
               panes={panes}
-              defaultActiveIndex={1}
+              defaultActiveIndex={0}
             />
           </Grid.Row>
         </Grid>

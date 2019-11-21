@@ -1,6 +1,6 @@
 import Car from '../models/car';
 import User from '../models/user';
-import Booking from '../models/booking';
+import Booking, { IBooking } from '../models/booking';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { secret } from '../env';
@@ -67,6 +67,104 @@ const resolvers: any = {
       }
 
       return cars;
+    },
+
+    userBookings: async (root: any, { email }: any): Promise<any> => {
+      let bookings;
+
+      // Find user bookings(by unique email)in DB
+      try {
+        bookings = await Booking.find({
+          email
+        });
+      } catch (error) {
+        console.log(error);
+        throw new Error('We have problem with finding your bookings');
+      }
+
+      const activeBookings: IBooking[] = [];
+      const cancelledBookings: IBooking[] = [];
+      const upcomingBookings: IBooking[] = [];
+      const currentBookings: IBooking[] = [];
+      const pastBookings: IBooking[] = [];
+
+      // decide if booking active or not
+      bookings.map(booking =>
+        booking.status === 'active'
+          ? activeBookings.push(booking)
+          : cancelledBookings.push(booking)
+      );
+
+      const today = Date.now() / 1000;
+
+      // decide if is past, current or upcoming booking
+      activeBookings.map(booking => {
+        const returnDateInSeconds =
+          Number(moment(booking.returnDay, 'DD-MM-YYYY').format('X')) +
+          Number(moment.duration(booking.returnHour).asSeconds());
+
+        const startDateInSeconds =
+          Number(moment(booking.startDay, 'DD-MM-YYYY').format('X')) +
+          Number(moment.duration(booking.startHour).asSeconds());
+
+        if (returnDateInSeconds < today) {
+          pastBookings.push(booking);
+        } else {
+          if (startDateInSeconds < today) {
+            currentBookings.push(booking);
+          } else {
+            upcomingBookings.push(booking);
+          }
+        }
+      });
+
+      // accountStatus, rentals, and moneySpend ,calculation from past bookings
+
+      const rentals = pastBookings.length;
+      const moneySpend = pastBookings.reduce(
+        (acc, curr) => acc + curr.total,
+        0
+      );
+
+      /* acountStatus
+        standard
+        classic: rentals> 5 && moneySpend > 150 000 ISK
+        premium: rentals> 10 && moneySpend > 400 000 ISK
+
+      */
+      let accountStatus: 'standard' | 'classic' | 'premium' = 'standard';
+
+      if (rentals >= 5 && moneySpend >= 150000) accountStatus = 'classic';
+
+      if (rentals >= 10 && moneySpend >= 400000) accountStatus = 'premium';
+
+      // -10 --> 'you reach maximum level'
+      const rentalsToNextUpgrade =
+        accountStatus === 'standard'
+          ? 5 - rentals
+          : accountStatus === 'classic'
+          ? 10 - rentals
+          : -10;
+
+      // -10 --> 'you reach maximum level'
+      const moneySpendToNextUpgrade =
+        accountStatus === 'standard'
+          ? 150000 - moneySpend
+          : accountStatus === 'classic'
+          ? 400000 - moneySpend
+          : -10;
+
+      return {
+        upcomingBookings,
+        currentBookings,
+        pastBookings,
+        cancelledBookings,
+        accountStatus,
+        rentals,
+        rentalsToNextUpgrade,
+        moneySpend,
+        moneySpendToNextUpgrade
+      };
     }
   },
 

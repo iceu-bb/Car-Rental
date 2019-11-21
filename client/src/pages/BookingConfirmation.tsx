@@ -17,7 +17,14 @@ export const BookingConfirmation: React.FC<RouteComponentProps<any>> = ({
   const { state } = useContext(Store);
 
   // prevent for diffrent booking numbers checking
-  if (bookingNumber != state.bookingNumber) history.push('/');
+  if (bookingNumber != state.bookingNumber)
+    return (
+      <Container style={{ margin: 50 }}>
+        <Segment>
+          Please Login to your account to see this Booking Confirmation
+        </Segment>
+      </Container>
+    );
 
   const {
     firstName,
