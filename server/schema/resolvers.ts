@@ -165,6 +165,14 @@ const resolvers: any = {
         moneySpend,
         moneySpendToNextUpgrade
       };
+    },
+
+    booking: async (root: any, { email, bookingNumber }: any): Promise<any> => {
+      const booking = await Booking.findOne({ email, bookingNumber }).populate(
+        'car'
+      );
+
+      return booking;
     }
   },
 
@@ -414,6 +422,7 @@ const resolvers: any = {
           airlineCode,
           flightNumber
         },
+        bookingType,
         totalDays,
         extras
       } = input;
@@ -433,6 +442,7 @@ const resolvers: any = {
           returnHour,
           renterAge,
           days,
+          bookingType,
           totalDays,
           airlineCode,
           flightNumber,

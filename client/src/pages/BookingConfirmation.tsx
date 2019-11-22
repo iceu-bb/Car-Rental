@@ -1,37 +1,64 @@
 import React, { useContext } from 'react';
 import { Store } from '../Store';
 
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Segment, Container, Icon, Divider, Grid } from 'semantic-ui-react';
+import { RouteComponentProps } from 'react-router-dom';
+import { Segment, Container, Icon, Divider } from 'semantic-ui-react';
 import { PickupReturn } from '../components/Booking-Right-Column/PickupReturn';
 import { VehicleDetails } from '../components/Booking-Right-Column/VehicleDetails';
 import { QuoteDetails } from '../components/Booking-Right-Column/QuoteDetails';
-
-// show only if booking step = 5
+import { useBookingQuery } from '../graphql/types';
 
 export const BookingConfirmation: React.FC<RouteComponentProps<any>> = ({
-  history,
   match
 }) => {
   const { bookingNumber } = match.params;
   const { state } = useContext(Store);
 
-  // prevent for diffrent booking numbers checking
+  const queryEmail = state.renterInformation.email || state.currentUser.email;
+
+  const { data, loading, error } = useBookingQuery({
+    variables: {
+      email: queryEmail,
+      bookingNumber: state.bookingNumber
+    }
+  });
+
+  // prevent for checking diffrent booking numbers
   if (bookingNumber != state.bookingNumber)
     return (
       <Container style={{ margin: 50 }}>
         <Segment>
-          Please Login to your account to see this Booking Confirmation
+          You have no access to see this booking reservation details. Please
+          login to your account panel.
         </Segment>
       </Container>
     );
+
+  if (!data || !data.booking || error || loading) {
+    return null;
+  }
 
   const {
     firstName,
     lastName,
     email,
-    telephoneNumber
-  } = state.renterInformation;
+    telephoneNumber,
+    startDay,
+    returnDay,
+    startHour,
+    returnHour,
+    renterAge,
+    days,
+    totalDays,
+    bookingType,
+    extras
+  } = data.booking;
+
+  const totalExtrasFormatted = {} as { [key: string]: number };
+
+  extras!.map((el: any) => {
+    totalExtrasFormatted[el.name] = el.value;
+  });
 
   return (
     <Segment style={{ margin: 0, backgroundColor: '#baba' }}>
@@ -57,31 +84,39 @@ export const BookingConfirmation: React.FC<RouteComponentProps<any>> = ({
               Confirmation Number <p># {bookingNumber}</p>
             </div>
           </Segment>
-
           <Segment style={{ margin: 0, padding: 0 }}>
             <div>Renter Information</div>
             <Divider />
             <div>
               <p>First Name {firstName}</p>
               <p>last Name {lastName}</p>
-              <p>age {state.bookingInfo.renterAge}</p>
+              <p>age {renterAge}</p>
               <p>email {email}</p>
               <p>telephoneNumber {telephoneNumber}</p>
             </div>
           </Segment>
-
           <Segment>
-            <PickupReturn bookingInfo={state.bookingInfo} />
+            <PickupReturn
+              bookingInfo={{
+                startDay,
+                returnDay,
+                startHour,
+                returnHour,
+                renterAge,
+                days
+              }}
+            />
+
             <QuoteDetails
-              totalDays={state.totalDays}
-              totalExtras={state.totalExtras}
-              days={state.bookingInfo.days}
-              fullCoverage={state.bookingType === 'fullCover'}
+              totalDays={totalDays}
+              totalExtras={totalExtrasFormatted}
+              days={days}
+              fullCoverage={bookingType === 'fullCover'}
             />
           </Segment>
-
-          {/*or query a car and then BookingCarCard */}
-          <VehicleDetails />
+          {/*or query a car and then BookingCarCard
+             <VehicleDetails />
+            */}
         </div>
       </Container>
     </Segment>

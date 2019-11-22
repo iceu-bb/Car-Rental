@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Segment, Header, Item, Button, Divider } from 'semantic-ui-react';
+import { useHistory } from 'react-router-dom';
+import { Store } from '../Store';
 
 interface Props {
   header: string;
@@ -7,6 +9,9 @@ interface Props {
 }
 
 export const BookingsSegment: React.FC<Props> = ({ header, bookings }) => {
+  const { dispatch } = useContext(Store);
+  const history = useHistory();
+
   if (!bookings || bookings.length === 0) {
     return (
       <Segment>
@@ -16,13 +21,18 @@ export const BookingsSegment: React.FC<Props> = ({ header, bookings }) => {
     );
   }
 
+  const handleBookingDetailsClick = (bookingNumber: number) => {
+    dispatch({ type: 'SET_BOOKING_NUMBER', payload: bookingNumber });
+    history.push(`/booking-confirmation/${bookingNumber}`);
+  };
+
   return (
     <Segment>
       <Header as='h3'>{header}</Header>
 
       {bookings.map(booking => {
         return (
-          <>
+          <div key={booking.bookingNumber}>
             <Item
               style={{
                 display: 'flex',
@@ -48,7 +58,13 @@ export const BookingsSegment: React.FC<Props> = ({ header, bookings }) => {
                   {booking.returnDay} - {booking.returnHour}
                 </p>
               </div>
-              <Button>See details</Button>
+              <Button
+                onClick={() => {
+                  handleBookingDetailsClick(booking.bookingNumber);
+                }}
+              >
+                See details
+              </Button>
             </Item>
             <Divider
               style={{
@@ -56,7 +72,7 @@ export const BookingsSegment: React.FC<Props> = ({ header, bookings }) => {
                 padding: 0
               }}
             />
-          </>
+          </div>
         );
       })}
     </Segment>

@@ -97,7 +97,7 @@ const initialState = {
   renterInformation: {
     firstName: 'Tadek',
     lastName: 'Norek',
-    email: 'alasld',
+    email: '',
     telephoneNumber: 11122
   },
   extrasToGroupRate: {

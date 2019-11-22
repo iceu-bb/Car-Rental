@@ -18,6 +18,8 @@ export interface IBooking extends Document {
   returnHour: string;
   totalDays: number;
   total: number;
+  bookingType: string;
+  totalExtras: number;
   airlineCode: string;
   flightNumber: string;
   extras: [{ name: string; value: number }];
@@ -49,8 +51,14 @@ const BookingSchema: Schema = new Schema<IBooking>(
     returnDay: { type: String, required: true },
     startHour: { type: String, required: true },
     returnHour: { type: String, required: true },
+    bookingType: {
+      type: String,
+      required: true,
+      enum: ['location', 'prepaid', 'fullCover']
+    },
     totalDays: { type: Number, required: true },
     total: { type: Number },
+    totalExtras: { type: Number },
     extras: [
       {
         name: { type: String, required: true },
@@ -77,6 +85,7 @@ BookingSchema.pre<IBooking>('save', function(next) {
     if (curr.value === 0 || curr.value === 1) return acc;
     return acc + curr.value;
   }, 0);
+  this.totalExtras = totalExtras;
   this.total = this.totalDays + totalExtras;
   next();
 });

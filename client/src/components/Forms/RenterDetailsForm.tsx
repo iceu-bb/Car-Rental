@@ -127,6 +127,7 @@ export const RenterDetailsForm: React.FC<Props> = ({ userData }) => {
         lastName,
         email,
         telephoneNumber,
+        bookingType: state.bookingType,
         bookingDate: {
           ...state.bookingInfo
         },

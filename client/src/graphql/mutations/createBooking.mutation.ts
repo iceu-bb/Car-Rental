@@ -10,6 +10,7 @@ export default gql`
     $airlineCode: String
     $flightNumber: String
     $totalDays: Int
+    $bookingType: String
     $bookingDate: BookingDateFormInput
     $extras: [ExtrasItem]
   ) {
@@ -21,6 +22,7 @@ export default gql`
         email: $email
         telephoneNumber: $telephoneNumber
         bookingDate: $bookingDate
+        bookingType: $bookingType
         totalDays: $totalDays
         extras: $extras
         airlineCode: $airlineCode
