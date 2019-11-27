@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { menuItems } from '../../helpers/constants';
+import { DropdownAccount } from '../DropdownAccount';
 import {
   Button,
   Container,
@@ -78,21 +79,7 @@ export const DesktopHeader: React.FC<HeaderProps> = ({ children, isAuth }) => {
                   </Button>
                 </>
               ) : (
-                <Button
-                  circular
-                  icon
-                  color='violet'
-                  inverted
-                  as={Link}
-                  to='/my-account'
-                  name='my-account'
-                  active={pathname === '/my-account'}
-                  style={{
-                    padding: 13
-                  }}
-                >
-                  <Icon name='user' size='large' inverted />
-                </Button>
+                <DropdownAccount />
               )}
             </Menu.Item>
           </Container>
@@ -102,3 +89,21 @@ export const DesktopHeader: React.FC<HeaderProps> = ({ children, isAuth }) => {
     </Responsive>
   );
 };
+
+{
+  /*<Button
+  circular
+  icon
+  color='violet'
+  inverted
+  as={Link}
+  to='/my-account'
+  name='my-account'
+  active={pathname === '/my-account'}
+  style={{
+    padding: 13
+  }}
+>
+  <Icon name='user' size='large' inverted />
+</Button> */
+}

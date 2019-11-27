@@ -11,7 +11,7 @@ export const HomepageHeading: React.FC<HeaderMobileProps> = ({ mobile }) => {
   return (
     <Segment
       style={{
-        minHeight: '90vh',
+        minHeight: '60vh',
         backgroundColor: 'teal',
         margin: 0
       }}

@@ -453,6 +453,18 @@ const resolvers: any = {
       }
 
       return newBooking;
+    },
+
+    cancelBooking: async (root: any, { id }: any): Promise<any> => {
+      try {
+        await Booking.findByIdAndUpdate(id, {
+          status: 'cancelled'
+        });
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+      return true;
     }
   }
 };

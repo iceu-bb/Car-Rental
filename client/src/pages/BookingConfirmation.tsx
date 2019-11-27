@@ -1,15 +1,19 @@
 import React, { useContext } from 'react';
 import { Store } from '../Store';
+import moment from 'moment';
 
 import { RouteComponentProps } from 'react-router-dom';
-import { Segment, Container, Icon, Divider } from 'semantic-ui-react';
+import { Segment, Container, Icon, Divider, Button } from 'semantic-ui-react';
 import { PickupReturn } from '../components/Booking-Right-Column/PickupReturn';
 import { VehicleDetails } from '../components/Booking-Right-Column/VehicleDetails';
 import { QuoteDetails } from '../components/Booking-Right-Column/QuoteDetails';
-import { useBookingQuery } from '../graphql/types';
+import { useBookingQuery, useCancelBookingMutation } from '../graphql/types';
+
+import UserBookings from '../graphql/queries/userBookings.query';
 
 export const BookingConfirmation: React.FC<RouteComponentProps<any>> = ({
-  match
+  match,
+  history
 }) => {
   const { bookingNumber } = match.params;
   const { state } = useContext(Store);
@@ -22,6 +26,8 @@ export const BookingConfirmation: React.FC<RouteComponentProps<any>> = ({
       bookingNumber: state.bookingNumber
     }
   });
+
+  const [cancelBooking] = useCancelBookingMutation();
 
   // prevent for checking diffrent booking numbers
   if (bookingNumber != state.bookingNumber)
@@ -39,6 +45,8 @@ export const BookingConfirmation: React.FC<RouteComponentProps<any>> = ({
   }
 
   const {
+    _id,
+    status,
     firstName,
     lastName,
     email,
@@ -54,20 +62,60 @@ export const BookingConfirmation: React.FC<RouteComponentProps<any>> = ({
     extras
   } = data.booking;
 
+  // we can cancel booking if is not eariler than 24h to booking, and if was not cancelled before
+  const isCancellable =
+    Number(
+      moment()
+        .add(1, 'days')
+        .format('X')
+    ) <
+      Number(moment(startDay, 'DD-MM-YYYY').format('X')) +
+        Number(moment.duration(startHour).asSeconds()) && status === 'active';
+
   const totalExtrasFormatted = {} as { [key: string]: number };
 
   extras!.map((el: any) => {
     totalExtrasFormatted[el.name] = el.value;
   });
 
+  const handleCancelBooking = async () => {
+    const { data } = await cancelBooking({
+      variables: {
+        id: _id as string
+      },
+      refetchQueries: [{ query: UserBookings, variables: { email } }],
+      awaitRefetchQueries: true
+    });
+    if (!data) {
+      console.error('ERROR');
+    }
+    history.push('/my-account');
+  };
+
   return (
     <Segment style={{ margin: 0, backgroundColor: '#baba' }}>
       <Container>
         <div style={{ maxWidth: 500, margin: '0 auto' }}>
           <Segment>
-            <div style={{ backgroundColor: 'yellow' }}>
+            <div
+              style={{
+                backgroundColor: 'yellow',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
               <Icon name='check circle outline' size='big' />
               Booking Confirmed!
+              {isCancellable && (
+                <Button
+                  color='red'
+                  size='medium'
+                  onClick={() => handleCancelBooking()}
+                >
+                  Cancel Booking
+                </Button>
+              )}
             </div>
             <div>
               Your vehicle has been booked successfully and you will receive an

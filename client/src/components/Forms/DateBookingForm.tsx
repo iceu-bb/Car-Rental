@@ -63,7 +63,7 @@ export const DateBookingForm = () => {
     const { days, error } = data.checkBookingDateForm;
 
     if (error) {
-      // display Modal
+      // trigger to display Modal
       setModalError(error);
       return;
     }
@@ -105,11 +105,11 @@ export const DateBookingForm = () => {
             closable
             markColor='violet'
             minDate={moment(new Date()).add(1, 'days')}
-            // maxDate={
-            //   date.returnDay !== ''
-            //     ? date.returnDay
-            //     : moment(new Date()).add(1, 'year')
-            // }
+            maxDate={
+              date.returnDay !== ''
+                ? date.returnDay
+                : moment(new Date()).add(1, 'year')
+            }
             animation='fade'
             hideMobileKeyboard
             value={date.startDay}

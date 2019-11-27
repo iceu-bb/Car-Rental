@@ -1,5 +1,12 @@
-import React, { useContext } from 'react';
-import { Segment, Header, Item, Button, Divider } from 'semantic-ui-react';
+import React, { useState, useContext } from 'react';
+import {
+  Segment,
+  Header,
+  Item,
+  Button,
+  Divider,
+  Pagination
+} from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 import { Store } from '../Store';
 
@@ -12,6 +19,8 @@ export const BookingsSegment: React.FC<Props> = ({ header, bookings }) => {
   const { dispatch } = useContext(Store);
   const history = useHistory();
 
+  const [activePage, setActivePage] = useState(1);
+
   if (!bookings || bookings.length === 0) {
     return (
       <Segment>
@@ -20,6 +29,10 @@ export const BookingsSegment: React.FC<Props> = ({ header, bookings }) => {
       </Segment>
     );
   }
+
+  const onPaginationPageChange = (e: any, { activePage }: any) => {
+    setActivePage(activePage);
+  };
 
   const handleBookingDetailsClick = (bookingNumber: number) => {
     dispatch({ type: 'SET_BOOKING_NUMBER', payload: bookingNumber });
@@ -30,51 +43,64 @@ export const BookingsSegment: React.FC<Props> = ({ header, bookings }) => {
     <Segment>
       <Header as='h3'>{header}</Header>
 
-      {bookings.map(booking => {
-        return (
-          <div key={booking.bookingNumber}>
-            <Item
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '.9rem',
-                fontWeight: '300'
-              }}
-            >
-              <div
+      {bookings
+        .slice((activePage - 1) * 5, (activePage - 1) * 5 + 5)
+        .map(booking => {
+          return (
+            <div key={booking.bookingNumber}>
+              <Item
                 style={{
                   display: 'flex',
-                  flexDirection: 'column'
+                  justifyContent: 'space-between',
+                  fontSize: '.9rem',
+                  fontWeight: '300'
                 }}
               >
-                <p
+                <div
                   style={{
-                    marginBottom: 5
+                    display: 'flex',
+                    flexDirection: 'column'
                   }}
                 >
-                  {booking.startDay} - {booking.startHour}
-                </p>
-                <p>
-                  {booking.returnDay} - {booking.returnHour}
-                </p>
-              </div>
-              <Button
-                onClick={() => {
-                  handleBookingDetailsClick(booking.bookingNumber);
+                  <p
+                    style={{
+                      marginBottom: 5
+                    }}
+                  >
+                    {booking.startDay} - {booking.startHour}
+                  </p>
+                  <p>
+                    {booking.returnDay} - {booking.returnHour}
+                  </p>
+                </div>
+                <Button
+                  onClick={() => {
+                    handleBookingDetailsClick(booking.bookingNumber);
+                  }}
+                >
+                  See details
+                </Button>
+              </Item>
+              <Divider
+                style={{
+                  margin: '5px 0',
+                  padding: 0
                 }}
-              >
-                See details
-              </Button>
-            </Item>
-            <Divider
-              style={{
-                margin: '5px 0',
-                padding: 0
-              }}
-            />
-          </div>
-        );
-      })}
+              />
+            </div>
+          );
+        })}
+
+      {bookings.length / 5 > 1 && (
+        <Pagination
+          activePage={activePage}
+          onPageChange={onPaginationPageChange}
+          firstItem={null}
+          lastItem={null}
+          totalPages={Math.ceil(bookings.length / 5)}
+          showEllipsis={null}
+        />
+      )}
     </Segment>
   );
 };

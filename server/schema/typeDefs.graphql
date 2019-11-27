@@ -52,6 +52,7 @@ type BookingExtrasItem {
 }
 
 type Booking {
+  _id: ID
   bookingNumber: Int!
   car: Car
   firstName: String!
@@ -182,4 +183,5 @@ type Mutation {
   ): Boolean
   checkBookingDateForm(input: BookingDateFormInput!): BookingDateFormResponse
   createBooking(input: CreateBookingInput!): Booking
+  cancelBooking(id: ID!): Boolean!
 }

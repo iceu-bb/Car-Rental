@@ -7,6 +7,8 @@ export default gql`
         name
         transmission
       }
+      _id
+      status
       firstName
       lastName
       email
