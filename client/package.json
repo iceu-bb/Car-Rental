@@ -28,6 +28,7 @@
     "graphql-request": "^1.8.2",
     "graphql-tag": "^2.10.1",
     "moment": "^2.24.0",
+    "pure-react-carousel": "^1.24.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-hook-form": "^3.27.0",

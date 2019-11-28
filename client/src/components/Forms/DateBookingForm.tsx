@@ -6,6 +6,55 @@ import { Form, Button, Segment, Modal } from 'semantic-ui-react';
 import { DateInput, TimeInput } from 'semantic-ui-calendar-react';
 import { useHistory } from 'react-router-dom';
 import { useCheckBookingDateFormMutation } from '../../graphql/types';
+import styled, { css } from 'styled-components';
+
+const InputStyles = css`
+  input {
+    border: 1px solid #fff !important;
+    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+  }
+
+  label {
+    color: #fff !important;
+  }
+
+  .icon {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+`;
+
+const StyledDateInput = styled(DateInput)`
+  ${InputStyles}
+`;
+
+const StyledTimeInput = styled(TimeInput)`
+  ${InputStyles}
+`;
+
+const StyledFormSelect = styled(Form.Select)`
+  .ui.selection.dropdown {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid #fff !important;
+    color: #fff !important;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+  }
+
+  .ui.dropdown:not(.button) > .default.text {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  .ui.selection.visible.dropdown > .text:not(.default) {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+`;
 
 interface IndexedDateObject {
   startDay: string;
@@ -77,7 +126,16 @@ export const DateBookingForm = () => {
   console.log(date);
 
   return (
-    <Segment>
+    <Segment
+      style={{
+        backgroundColor: 'rgba(0,0,0,.1)',
+        margin: '0 auto',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        maxWidth: 600
+      }}
+    >
       <Modal
         size='small'
         open={modalError.length > 1}
@@ -95,10 +153,26 @@ export const DateBookingForm = () => {
           />
         </Modal.Actions>
       </Modal>
-      <Form size='large' onSubmit={handleSubmit}>
-        Pick Up Date
-        <Form.Group>
-          <DateInput
+      <Form
+        size='large'
+        onSubmit={handleSubmit}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          alignItems: 'center'
+        }}
+      >
+        <Form.Group
+          style={{
+            marginBottom: 20,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <StyledDateInput
+            label='Pick Up Date'
             placeholder='Date'
             popupPosition='bottom left'
             name='startDay'
@@ -118,7 +192,9 @@ export const DateBookingForm = () => {
             autoComplete='off'
             onChange={handleDateChange}
           />
-          <TimeInput
+
+          <StyledTimeInput
+            label='Pick Up Time'
             placeholder='Time'
             popupPosition='bottom left'
             name='startHour'
@@ -132,9 +208,17 @@ export const DateBookingForm = () => {
             onChange={handleDateChange}
           />
         </Form.Group>
-        Drop Off Date
-        <Form.Group style={{ marginBottom: 30 }}>
-          <DateInput
+
+        <Form.Group
+          style={{
+            marginBottom: 30,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <StyledDateInput
+            label='Return Date'
             placeholder='Date'
             popupPosition='bottom left'
             name='returnDay'
@@ -153,7 +237,9 @@ export const DateBookingForm = () => {
             autoComplete='off'
             onChange={handleDateChange}
           />
-          <TimeInput
+
+          <StyledTimeInput
+            label='Return Time'
             placeholder='Time'
             popupPosition='bottom left'
             name='returnHour'
@@ -169,19 +255,19 @@ export const DateBookingForm = () => {
         </Form.Group>
         <Form.Group
           style={{
-            maxWidth: 500,
             display: 'flex',
-            justifyContent: 'space-between'
+            justifyContent: 'center',
+            marginBottom: 25
           }}
         >
-          <Form.Select
+          <StyledFormSelect
             name='renterAge'
             options={ageOptions}
             placeholder='Renter Age'
             onChange={handleSelectChange}
           />
         </Form.Group>
-        <Button type='submit' size='huge' color='violet'>
+        <Button type='submit' size='huge' color='yellow'>
           Find a vehicle
         </Button>
       </Form>
