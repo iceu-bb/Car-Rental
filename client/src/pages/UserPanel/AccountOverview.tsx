@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useUserBookingsQuery } from '../../graphql/types';
 import {
   Container,
@@ -16,6 +16,10 @@ interface Props {}
 
 export const AccountOverview: React.FC<Props> = () => {
   const { state, dispatch } = useContext(Store);
+
+  useEffect(() => {
+    dispatch({ type: 'SET_BOOKING_STEP', payload: 0 });
+  }, []);
 
   const { data, loading, error } = useUserBookingsQuery({
     variables: { email: state.currentUser.email }

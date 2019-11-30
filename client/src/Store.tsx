@@ -81,8 +81,8 @@ const initialState = {
   } as IndexedNumber,
   bookingInfo: {
     startDay: '17-12-2019',
-    returnDay: '27-12-2019',
-    startHour: '10:40',
+    returnDay: '23-12-2019',
+    startHour: '20:40',
     returnHour: '20:30',
     renterAge: '25+',
     days: 5

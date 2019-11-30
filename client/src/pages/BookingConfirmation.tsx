@@ -62,7 +62,7 @@ export const BookingConfirmation: React.FC<RouteComponentProps<any>> = ({
     extras
   } = data.booking;
 
-  // we can cancel booking if is not eariler than 24h to booking, and if was not cancelled before
+  // we can cancel booking if is not eariler than 24h to booking, and if was not cancelled before(status=active) && step !==5 (fresh booking)
   const isCancellable =
     Number(
       moment()
@@ -70,7 +70,9 @@ export const BookingConfirmation: React.FC<RouteComponentProps<any>> = ({
         .format('X')
     ) <
       Number(moment(startDay, 'DD-MM-YYYY').format('X')) +
-        Number(moment.duration(startHour).asSeconds()) && status === 'active';
+        Number(moment.duration(startHour).asSeconds()) &&
+    status === 'active' &&
+    state.step !== 5;
 
   const totalExtrasFormatted = {} as { [key: string]: number };
 

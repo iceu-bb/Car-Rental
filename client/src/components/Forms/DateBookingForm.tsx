@@ -86,7 +86,7 @@ export const DateBookingForm = () => {
   } as IndexedDateObject);
 
   const handleDateChange = (e: any, { name, value }: any) => {
-    // check if data match pattern for Date or Hour
+    //check if data match pattern for Date or Hour
     const testRegexDay = /^\d{2}\-\d{2}\-\d{4}$/.test(value);
     const testRegexStartHour = /^\d{2}\:\d{2}$/.test(value);
     if (!testRegexDay && !testRegexStartHour) {
@@ -178,12 +178,12 @@ export const DateBookingForm = () => {
             name='startDay'
             closable
             markColor='violet'
-            minDate={moment(new Date()).add(1, 'days')}
-            maxDate={
-              date.returnDay !== ''
-                ? date.returnDay
-                : moment(new Date()).add(1, 'year')
-            }
+            // minDate={moment(new Date()).add(1, 'days')}
+            // maxDate={
+            //   date.returnDay !== ''
+            //     ? date.returnDay
+            //     : moment(new Date()).add(1, 'year')
+            // }
             animation='fade'
             hideMobileKeyboard
             value={date.startDay}
@@ -223,12 +223,12 @@ export const DateBookingForm = () => {
             popupPosition='bottom left'
             name='returnDay'
             closable
-            minDate={
-              date.startDay === ''
-                ? moment(new Date()).add(1, 'days')
-                : date.startDay
-            }
-            maxDate={moment(new Date()).add(1, 'year')}
+            // minDate={
+            //   date.startDay === ''
+            //     ? moment(new Date()).add(1, 'days')
+            //     : date.startDay
+            // }
+            // maxDate={moment(new Date()).add(1, 'year')}
             animation='fade'
             hideMobileKeyboard
             value={date.returnDay}

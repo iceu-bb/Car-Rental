@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Store } from '../Store';
-import { Route, RouteComponentProps } from 'react-router-dom';
+import styled from 'styled-components';
+import { Route, RouteComponentProps, Link } from 'react-router-dom';
 import { Segment, Container, Menu, Grid } from 'semantic-ui-react';
 
 // Left Column
@@ -15,8 +16,36 @@ import { VehicleDetails } from '../components/Booking-Right-Column/VehicleDetail
 import { QuoteDetails } from '../components/Booking-Right-Column/QuoteDetails';
 import { Discount } from '../components/Booking-Right-Column/Discount';
 
+const StyledMenuItem = styled(Menu.Item)`
+  font-size: 1.3rem !important;
+  margin: 20px !important;
+  padding: 0 68px 12px 0 !important;
+  font-weight: 300 !important;
+  color: #fbbd08 !important;
+  color: violet !important;
+  border-bottom: 4px solid rgba(238, 130, 238, 0.5) !important;
+
+  &:hover {
+    cursor: pointer;
+    border-bottom: 4px solid rgba(238, 130, 238, 0.8) !important;
+  }
+
+  &.active {
+    color: rgba(251, 189, 8, 0.8) !important;
+    border-bottom: 4px solid rgba(251, 189, 8, 0.86) !important;
+    pointer-events: none;
+  }
+
+  &.disabled {
+    border-bottom: 4px solid rgba(40, 40, 40, 0.2) !important;
+  }
+`;
+
 // TODO: similar component to Our Fleet Page
-export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
+export const BookingPage: React.FC<RouteComponentProps<any>> = ({
+  match,
+  history
+}) => {
   const { stepName } = match.params;
   const { state } = useContext(Store);
 
@@ -24,37 +53,45 @@ export const BookingPage: React.FC<RouteComponentProps<any>> = ({ match }) => {
     return null;
   }
 
+  const handleMenuItemClick = (param: string) => {
+    param === 'search'
+      ? history.replace('/')
+      : history.replace(`/booking/${param}`);
+  };
+
   return (
     <Segment style={{ margin: 0 }}>
       <Container>
+        {/*Booking Menu*/}
         <Menu pointing secondary style={{ borderBottom: 'none' }}>
-          <Menu.Item
+          <StyledMenuItem
             name='search'
             content='Search'
-            style={{ margin: 10, padding: '0 30px 10px 0', color: 'brown' }}
+            onClick={() => handleMenuItemClick('search')}
           />
-          <Menu.Item
+          <StyledMenuItem
             name='selection'
             content='Vehicle Selection'
             active={stepName === 'selection'}
-            style={{ margin: 10, padding: '0 30px 10px 0' }}
+            onClick={() => handleMenuItemClick('selection')}
           />
-          <Menu.Item
+          <StyledMenuItem
             name='extras'
             content='Accessories & Extras'
             active={stepName === 'extras'}
-            style={{ margin: 10, padding: '0 30px 10px 0' }}
+            disabled={state.step < 3}
+            onClick={() => handleMenuItemClick('extras')}
           />
-          <Menu.Item
+          <StyledMenuItem
             name='details'
             content='Renter Details'
             active={stepName === 'details'}
-            style={{ margin: 10, padding: '0 30px 10px 0' }}
+            disabled={state.step < 4}
           />
-          <Menu.Item
+          <StyledMenuItem
             name='confirm'
             content='Confirm Booking'
-            style={{ margin: 10, padding: '0 30px 10px 0' }}
+            disabled={true}
           />
         </Menu>
         <Grid>

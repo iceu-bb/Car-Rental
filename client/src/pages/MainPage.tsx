@@ -113,13 +113,6 @@ export const MainPage: React.FC = () => {
           </MainSectionContainer>
         </Container>
       </Segment>
-
-      <Segment
-        style={{ margin: 0, backgroundColor: 'violet', minHeight: '500px' }}
-        as='footer'
-      >
-        FOOTER
-      </Segment>
     </>
   );
 };

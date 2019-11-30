@@ -12,6 +12,7 @@ import { Header } from '../components/Header/index';
 import { CarDetail } from '../components/Cars/CarDetail';
 import { BookingPage } from '../pages/BookingPage';
 import { BookingConfirmation } from '../pages/BookingConfirmation';
+import { Segment } from 'semantic-ui-react';
 
 export const Router: React.FC = () => {
   const { state, dispatch } = useContext(Store);
@@ -46,6 +47,12 @@ export const Router: React.FC = () => {
             component={BookingConfirmation}
           />
         </Switch>
+        <Segment
+          style={{ margin: 0, backgroundColor: 'violet', minHeight: '500px' }}
+          as='footer'
+        >
+          FOOTER
+        </Segment>
       </Header>
     </BrowserRouter>
   );
