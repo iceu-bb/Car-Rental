@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useCallback } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 import { Store } from '../Store';
+import { Segment } from 'semantic-ui-react';
 
 import { MainPage } from '../pages/MainPage';
 import { LoginForm } from '../pages/LoginForm';
@@ -12,7 +13,8 @@ import { Header } from '../components/Header/index';
 import { CarDetail } from '../components/Cars/CarDetail';
 import { BookingPage } from '../pages/BookingPage';
 import { BookingConfirmation } from '../pages/BookingConfirmation';
-import { Segment } from 'semantic-ui-react';
+import { TravelGuide } from '../pages/TravelGuide';
+import { About } from '../pages/About';
 
 export const Router: React.FC = () => {
   const { state, dispatch } = useContext(Store);
@@ -37,6 +39,8 @@ export const Router: React.FC = () => {
           <Route exact path='/' component={MainPage} />
           <Route exact path='/login' component={LoginForm} />
           <Route exact path='/register' component={RegisterForm} />
+          <Route exact path='/travel-guide' component={TravelGuide} />
+          <Route exact path='/about' component={About} />
           <Route exact path='/vehicles' component={OurFleetPage} />
           <Route exact path='/vehicles/:slug' component={CarDetail} />
           <ProtectedRoute exact path='/my-account' component={UserPanel} />

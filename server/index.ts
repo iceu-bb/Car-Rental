@@ -10,12 +10,12 @@ import jwt from 'jsonwebtoken';
 mongoose
   .connect(mongo_uri, {
     useNewUrlParser: true,
+    useFindAndModify: false,
     useUnifiedTopology: true,
     useCreateIndex: true
   })
   .then(() => console.log('DB connected'))
-  .catch(() => console.log('Error with Db connection'));
-mongoose.set('useFindAndModify', false);
+  .catch((err: Error) => console.log('Error with Db connection', err));
 
 const app = express();
 app.use(cors({ credentials: true, origin }));

@@ -12,6 +12,7 @@ import {
 import { VehiclesCarousel } from '../components/VehiclesCarousel';
 import { SpecialOffers } from '../components/SpecialOffers';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const MainSectionContainer = styled.section`
   max-width: 1000px;
@@ -105,7 +106,7 @@ export const MainPage: React.FC = () => {
                   accustomed to. We provide you with safe cars but the more you
                   are informed about traveling in Iceland the better.
                 </StyledCardDescription>
-                <Button size='big' color='violet'>
+                <Button as={Link} to='/travel-guide' size='big' color='violet'>
                   Read More
                 </Button>
               </Card.Content>

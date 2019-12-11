@@ -15,7 +15,9 @@ interface Props {
 
 export const ExtrasItem: React.FC<Props> = ({ item }) => {
   const { state, dispatch } = useContext(Store);
-  const [isActive, setActive] = useState(false);
+
+  // check if item was selected - this case is when we move back from RenterDetails section and we have had choosen some extras items
+  const [isActive, setActive] = useState(state.totalExtras[item.symbol] > 5);
 
   // adjust price to group, only coverages
   const groupRelatedItemPrice = Math.round(

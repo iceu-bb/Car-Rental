@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useCallback, useEffect } from 'react';
 import { Segment, Header, Grid, Button } from 'semantic-ui-react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { extrasItems } from '../../helpers/constants';
@@ -7,6 +7,11 @@ import { Store } from '../../Store';
 
 export const Extras: React.FC<RouteComponentProps> = ({ history }) => {
   const { state, dispatch } = useContext(Store);
+
+  useEffect(() => {
+    // set correct step
+    dispatch({ type: 'SET_BOOKING_STEP', payload: 3 });
+  }, []);
 
   // think memo
   const renderExtrasItems = useCallback(() => {
