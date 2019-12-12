@@ -1,7 +1,7 @@
 export const menuItems = [
   { to: '/', name: 'home', text: 'Home' },
   { to: '/vehicles', name: 'fleet', text: 'Our Fleet' },
-  { to: '/bookings', name: 'bookings', text: 'Bookings' },
+  { to: '/travel-guide', name: 'guide', text: 'Travel Guide' },
   { to: '/about', name: 'about', text: 'About' },
   { to: '/login', name: 'login', text: 'Login' },
   { to: '/register', name: 'register', text: 'Register' }
@@ -9,20 +9,36 @@ export const menuItems = [
 
 export const carTypes = ['All', 'Economy', 'Compact', 'SUV', 'Full Size'];
 
+export const smallIcons = [
+  { id: 0, name: 'passengers', text: 'Passengers' },
+  { id: 1, name: 'baggages', text: 'Large' },
+  { id: 2, name: 'doors', text: 'Doors' },
+  { id: 3, name: 'automatic', text: 'Automatic' }
+];
+
 export const features = [
-  { name: 'passengers', text: 'Passengers', icon: 'users', isNumber: true },
-  { name: 'baggages', text: 'Baggages', icon: 'suitcase', isNumber: true },
-  { name: 'doors', text: 'Doors', icon: 'nintendo switch', isNumber: true },
-  { name: 'transmission', icon: 'settings', isString: true },
-  { name: 'propulsion', icon: 'cogs', isString: true },
+  {
+    name: 'passengers',
+    text: 'Passengers',
+    icon: 'passengers',
+    isNumber: true
+  },
+  { name: 'baggages', text: 'Baggages', icon: 'baggage', isNumber: true },
+  { name: 'doors', text: 'Doors', icon: 'doors', isNumber: true },
+
+  { name: 'propulsion', icon: '4x4', isString: true },
   { name: 'incineration', icon: 'leaf', isString: true },
-  { name: 'airconditioning', text: 'Air Conditioning', icon: 'snowflake' },
-  { name: 'ABS', text: 'ABS', icon: 'users' },
+  {
+    name: 'airconditioning',
+    text: 'Air Conditioning',
+    icon: 'air-conditioning'
+  },
+  { name: 'ABS', text: 'ABS', icon: 'abs' },
   { name: 'USB', text: 'USB', icon: 'usb' },
-  { name: 'powerWindows', text: 'Power Windows', icon: 'microchip' },
-  { name: 'remoteLocking', text: 'Remote Locking', icon: 'lock open' },
+  { name: 'powerWindows', text: 'Power Windows', icon: 'power-windows' },
+  { name: 'remoteLocking', text: 'Remote Locking', icon: 'remote-locking' },
   { name: 'Bluetooth', text: 'Bluetooth', icon: 'bluetooth' },
-  { name: 'cruiseControl', text: 'Cruise Control', icon: 'dashboard' },
+  { name: 'cruiseControl', text: 'Cruise Control', icon: 'cruise-control' },
   { name: 'electricCar', text: 'Electric Car', icon: 'power card' }
 ];
 

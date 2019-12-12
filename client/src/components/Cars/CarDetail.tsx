@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCarQuery, Car } from '../../graphql/types';
-import { Icon, Item } from 'semantic-ui-react';
 import {
+  Item,
   Container,
   Segment,
   Image,
@@ -12,6 +12,22 @@ import {
 import { features } from '../../helpers/constants';
 import { RouteComponentProps } from 'react-router-dom';
 import { RelatedCars } from './RelatedCars';
+import styled from 'styled-components';
+
+const StyledImage = styled(Image)`
+  margin-bottom: 2rem;
+  width: 90%;
+
+  @media (max-width: 968px) {
+    width: 85%;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    width: 75%;
+    margin-bottom: 1rem;
+  }
+`;
 
 interface IndexedCar extends Car {
   [index: string]: any;
@@ -45,16 +61,37 @@ export const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
     //  3) render icons
     return iconFeatures.map(iconFeature => {
       const { name, text, icon, isNumber, isString }: any = iconFeature;
+
       return (
-        <Grid.Column key={name}>
+        <Grid.Column
+          key={name}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            margin: '25px 0'
+          }}
+        >
           <Grid.Row>
-            <Icon name={icon} size='huge' color='violet' />
+            <StyledImage
+              centered
+              // display diffrent image related to car propulsion
+              src={
+                car[name] !== 'Front Wheel Drive'
+                  ? `${process.env.PUBLIC_URL}/assets/icons/icon-${icon}.png`
+                  : `${process.env.PUBLIC_URL}/assets/icons/icon-fwd.png`
+              }
+              alt={`icon ${icon}`}
+            />
           </Grid.Row>
-          <Grid.Row style={{ marginTop: 15, fontSize: '1.4rem' }}>
+          <Grid.Row style={{ fontSize: '1.4rem' }}>
             {(isNumber || isString) && name === 'incineration'
               ? car[name] + ' C02 g/km '
               : car[name] === true
               ? text
+              : name === 'propulsion'
+              ? car[name]
               : car[name] + ' ' + name}
           </Grid.Row>
         </Grid.Column>
@@ -111,13 +148,20 @@ export const CarDetail: React.FC<RouteComponentProps> = ({ match }) => {
           {renderFeatures()}
         </Grid>
 
-        <Divider horizontal style={{ margin: '100px 0 80px' }}>
-          <Header as='h4' size='large'>
-            Related Vehicles
-          </Header>
-        </Divider>
+        {car.group !== 'F' ? (
+          <Divider horizontal style={{ margin: '100px 0 80px' }}>
+            <Header as='h4' size='large'>
+              Related Vehicles
+            </Header>
+          </Divider>
+        ) : (
+          <Divider horizontal style={{ margin: '100px 0 80px' }}>
+            <Header as='h4' size='medium'>
+              {car.producer} {car.name} is one of our best Cars
+            </Header>
+          </Divider>
+        )}
 
-        {/* 3 - TODO - Related Vehicles */}
         <RelatedCars carGroup={car.group} carId={car._id} />
       </Container>
     </Segment>

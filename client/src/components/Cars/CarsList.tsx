@@ -26,7 +26,7 @@ export const CarsList: React.FC<CarsListProps> = ({ cars, filter }) => {
   );
 
   return (
-    <Card.Group stackable itemsPerRow='3' centered>
+    <Card.Group doubling stackable itemsPerRow={3} centered>
       {renderCarList()}
     </Card.Group>
   );

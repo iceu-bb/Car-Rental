@@ -12,7 +12,12 @@ export const OurFleetPage: React.FC = () => {
   const renderButtons = useCallback(
     () =>
       carTypes.map(type => (
-        <Button key={type} size='small' onClick={() => setFilter(`${type}`)}>
+        <Button
+          key={type}
+          size='small'
+          onClick={() => setFilter(`${type}`)}
+          style={{ margin: '0 5px 10px 0' }}
+        >
           {type}
         </Button>
       )),
@@ -24,7 +29,7 @@ export const OurFleetPage: React.FC = () => {
   }
 
   return (
-    <Container style={{ padding: 50 }}>
+    <Container style={{ padding: '50px 30px' }}>
       <Segment style={{ marginBottom: 50 }}>
         <Header as='h2'>
           <Header.Content>

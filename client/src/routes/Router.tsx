@@ -52,7 +52,13 @@ export const Router: React.FC = () => {
           />
         </Switch>
         <Segment
-          style={{ margin: 0, backgroundColor: 'violet', minHeight: '500px' }}
+          style={{
+            margin: 0,
+            backgroundColor: 'violet',
+            minHeight: '500px',
+            borderRadius: 0,
+            border: 0
+          }}
           as='footer'
         >
           FOOTER

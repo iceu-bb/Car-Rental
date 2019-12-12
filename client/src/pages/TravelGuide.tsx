@@ -12,6 +12,7 @@ const BoldText = styled.span`
 const StyledText = styled.span`
   font-size: 1.2rem;
   font-weight: 300;
+  line-height: 1.4;
 `;
 
 interface Props {}
@@ -34,7 +35,9 @@ export const TravelGuide: React.FC<Props> = () => {
     <List bulleted>
       {awareItems.map((item, index) => (
         <List.Item key={index}>
-          <StyledText>{item}</StyledText>
+          <StyledText style={{ fontSize: '1.25rem', lineHeight: 1 }}>
+            {item}
+          </StyledText>
         </List.Item>
       ))}
     </List>
@@ -62,10 +65,15 @@ export const TravelGuide: React.FC<Props> = () => {
 
   return (
     <Container>
-      <Segment style={{ padding: '60px 10%' }}>
+      <Segment style={{ padding: '60px 10%', borderRadius: 0 }}>
         <Header
           as='h2'
-          style={{ fontSize: '2.2rem', textAlign: 'center', marginBottom: 50 }}
+          style={{
+            fontSize: '2rem',
+            textAlign: 'center',
+            marginBottom: 50,
+            textTransform: 'uppercase'
+          }}
         >
           How to drive in Iceland
         </Header>

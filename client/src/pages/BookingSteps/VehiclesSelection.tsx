@@ -32,7 +32,12 @@ export const VehiclesSelection: React.FC<Props> = () => {
   const renderButtons = useCallback(
     () =>
       carTypes.map(type => (
-        <Button key={type} size='small' onClick={() => setFilter(`${type}`)}>
+        <Button
+          key={type}
+          size='small'
+          onClick={() => setFilter(`${type}`)}
+          style={{ margin: '0 5px 10px 0' }}
+        >
           {type}
         </Button>
       )),

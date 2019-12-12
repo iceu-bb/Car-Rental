@@ -10,6 +10,7 @@ const BoldText = styled.span`
 const StyledText = styled.span`
   font-size: 1.2rem;
   font-weight: 300;
+  line-height: 1.4;
 `;
 
 interface Props {}
@@ -34,12 +35,17 @@ export const About: React.FC<Props> = () => {
   const MemoMap = useCallback(() => <Map {...mapProps} />, []);
 
   return (
-    <Container>
-      <Segment style={{ padding: '60px 10%' }}>
+    <Container style={{ padding: 0, margin: 0 }}>
+      <Segment
+        style={{
+          padding: '60px 10%',
+          borderRadius: 0
+        }}
+      >
         <Header
           as='h2'
           style={{
-            fontSize: '2.2rem',
+            fontSize: '2rem',
             textAlign: 'center',
             marginBottom: 50,
             textTransform: 'uppercase'
@@ -69,7 +75,7 @@ export const About: React.FC<Props> = () => {
         <Header
           as='h2'
           style={{
-            fontSize: '2.2rem',
+            fontSize: '2rem',
             textAlign: 'center',
             marginBottom: 50,
             textTransform: 'uppercase'
